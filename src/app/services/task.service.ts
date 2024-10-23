@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 })
 export class TaskService {
     private taskStatusCache: { [taskId: number]: string } = {};
-    private apiUrl = 'http://localhost/KANBAN-BOARD/kanban/kanban-board-api/';
+    private apiUrl = 'http://localhost/IMAGE-GALLERY/image-gallery-api/';
 
     constructor(private http: HttpClient, private authService: AuthService, private router: Router) { }
 

@@ -11,7 +11,6 @@ import { Task } from '../models/task.model';
 import { TaskService } from '../services/task.service';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
-import { BackgroundService } from '../services/background.service';
 
 declare var $: any;  // Import jQuery to use Bootstrap's JS features
 
@@ -45,7 +44,7 @@ export class KanbanBoardComponent implements OnInit {
   confirmationMessage: string = '';
   confirmationAction: (() => void) | null = null;
 
-  constructor(private taskService: TaskService, public authService: AuthService, private router: Router, private backgroundService: BackgroundService) { }
+  constructor(private taskService: TaskService, public authService: AuthService, private router: Router) { }
 
   logout() {
     this.authService.logout().subscribe(
@@ -83,8 +82,6 @@ export class KanbanBoardComponent implements OnInit {
     console.log('Calling loadTasks'); // Debugging log
     this.loadTasks();
     this.connectedLists = this.columns.map(column => `cdk-drop-list-${column.title}`);
-    this.user.background = this.authService.getbackground() || '';
-    console.log('Background:', this.user.background);
   }
 
   loadTasks(): void {
@@ -216,18 +213,6 @@ export class KanbanBoardComponent implements OnInit {
     if (this.confirmationAction) {
       this.confirmationAction();
     }
-  }
-
-  changeBackground(newBackground: string) {
-    const email = this.authService.getEmail(); // Add this method to AuthService if not exists
-    this.backgroundService.updateBackground(email, newBackground).subscribe(
-      () => {
-        this.user.background = newBackground;
-        this.authService.setBackground(newBackground);
-        $('#changeBackgroundModal').modal('hide');
-      },
-      error => console.error('Error updating background:', error)
-    );
   }
 
   closeChangeBgForm(): void {

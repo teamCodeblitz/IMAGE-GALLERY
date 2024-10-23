@@ -1,53 +1,55 @@
-<div class="position-relative">
-    <div class="area">
-        <ul class="circles">
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-        </ul>
-    </div>
+<div class="form-container">
+  <div class="board-form-inner2">
+    <form class="sticky" [formGroup]="registerForm" (ngSubmit)="register()">
+      <div class="header">
+        <h2 class="">ImageGallery</h2>
+      </div>
 
-
-    <div class="form-container">
-
-        <div class="board-form-inner2">
-
-            <form class="sticky" [formGroup]="registerForm" (ngSubmit)="register()">
-                <div class="header">
-                    <h2 class="white">Register</h2>
-                    <hr class="white">
-                </div>
-                
-                <div>
-                    <label for="firstName">First Name</label>
-                    <input id="firstName" formControlName="firstName" type="firstName">
-                </div>
-                <div>
-                    <label for="lastName">Last Name</label>
-                    <input id="lastName" formControlName="lastName" type="lastName">
-                </div>
-                <div>
-                    <label for="middleName">Middle Name</label>
-                    <input id="middleName" formControlName="middleName" type="middleName">
-                </div>
-                <div>
-                    <label for="email">Email</label>
-                    <input id="email" formControlName="email" type="email">
-                </div>
-                <div>
-                    <label for="password">Password</label>
-                    <input id="password" formControlName="password" type="password">
-                </div>
-                <hr>
-                <button type="submit">Register</button>
-                <button class="submit1" (click)="goToLogin()">Sign in?</button>
-            </form>
-        </div>
-    </div>
+      <div>
+        <input
+          id="firstName"
+          formControlName="firstName"
+          type="text"
+          placeholder="First Name"
+        />
+      </div>
+      <div>
+        <input
+          id="lastName"
+          formControlName="lastName"
+          type="text"
+          placeholder="Last Name"
+        />
+      </div>
+      <div>
+        <input
+          id="middleName"
+          formControlName="middleName"
+          type="text"
+          placeholder="Middle Name"
+        />
+      </div>
+      <div>
+        <input
+          id="email"
+          formControlName="email"
+          type="email"
+          placeholder="Email"
+        />
+      </div>
+      <div>
+        <input
+          id="password"
+          formControlName="password"
+          type="password"
+          placeholder="Password"
+        />
+      </div>
+      <hr class="white" />
+      <button type="submit">Register</button>
+      <a class="signup" (click)="goToLogin()">
+        Already have an account? <span class="signup-link">Sign in</span>
+      </a>
+    </form>
+  </div>
+</div>

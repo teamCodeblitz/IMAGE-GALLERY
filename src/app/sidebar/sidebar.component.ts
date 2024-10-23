@@ -54,12 +54,10 @@ export class AppSidebarComponent implements OnInit {
   ngOnInit() {
     this.user.firstName = this.authService.getfirstName() || '';
     this.user.lastName = this.authService.getlastName() || '';
-    this.user.role = this.authService.getRole() || '';
     this.user.avatar = this.authService.getavatar() || ''; // Fetch role from AuthService
     
     console.log('First Name:', this.user.firstName);
     console.log('Last Name:', this.user.lastName);
-    console.log('Role:', this.user.role);
     console.log('Avatar:', this.user.avatar);
   }
 

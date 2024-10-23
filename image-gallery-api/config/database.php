@@ -3,7 +3,7 @@ date_default_timezone_set("Asia/Manila");
 set_time_limit(1000);
 
 define("SERVER", "localhost");
-define("DATABASE", "kanban-board");
+define("DATABASE", "image-gallery");
 define("USER", "root");
 define("PASSWORD", "");
 define("DRIVER", "mysql");

@@ -1,24 +1,20 @@
-
-
     <div class="form-container">
         <div class="board-form-inner2">
-
+            <img src="assets/images/cp.png" alt="Logo" class="form-image"> <!-- Add the image here -->
             <form class="sticky" [formGroup]="loginForm" (ngSubmit)="login()">
                 <div class="header">
-                    <h2 class="white">KanbanBoard</h2>
+                    <h2 class="">ImageGallery</h2>
                 </div>
                 <div>
-                    <label for="email">Email</label>
-                    <input id="email" formControlName="email" type="email">
+                    <input id="email" formControlName="email" type="email" placeholder="Email">
                 </div>
                 <div>
-                    <label for="password">Password</label>
-                    <input id="password" formControlName="password" type="password">
+                    <input id="password" formControlName="password" type="password" placeholder="Password">
                 </div>
                 <button type="submit">Login</button>
-
-                <button class="submit1" (click)="goToRegister()">Sign up?</button>
+                <a class="signup" (click)="goToRegister()">
+                    Don't have an account? <span class="signup-link">Sign up</span>
+                </a>
             </form>
-
         </div>
     </div>

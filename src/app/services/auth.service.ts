@@ -9,14 +9,12 @@ import { Router } from '@angular/router';
     providedIn: 'root'
 })
 export class AuthService {
-    apiUrl = 'http://localhost/KANBAN-BOARD/kanban/kanban-board-api/';
+    apiUrl = 'http://localhost/IMAGE-GALLERY/image-gallery-api/';
     private token: string = '';
     private userId: number | undefined;
-    private role: string | undefined;
     private firstName: string | undefined;
     private lastName: string | undefined;
     private avatar: string | undefined;
-    private background: string | undefined;
   
     constructor(
       private http: HttpClient,
@@ -26,26 +24,20 @@ export class AuthService {
       if (isPlatformBrowser(this.platformId)) {
         this.token = localStorage.getItem('token') || '';
         this.userId = parseInt(localStorage.getItem('userId') || '', 10);
-        this.role = localStorage.getItem('role') || '';
         this.firstName = localStorage.getItem('firstName') || ''; 
         this.lastName = localStorage.getItem('lastName') || ''; 
         this.avatar = localStorage.getItem('avatar') || '';
-        this.background = localStorage.getItem('background')|| '';
         console.log(
           'Constructor - Token:',
           this.token,
           'UserId:',
           this.userId,
-          'Role:',
-          this.role,
           'FirstName:',
           this.firstName,
           'LastName:',
           this.lastName,
           'avatar:',
           this.avatar,
-          'background:',
-          this.background
         );
       }
     }
@@ -74,18 +66,6 @@ export class AuthService {
         throw new Error('User ID is not set');
       }
       return this.userId;
-    }
-
-    getRole(): string | undefined {
-      return this.role;
-    }
-  
-    setRole(role: string): void {
-      this.role = role;
-      if (isPlatformBrowser(this.platformId)) {
-        localStorage.setItem('role', role);
-        console.log('setRole - Role set:', this.role);
-      }
     }
   
     // Mock method to get user first name
@@ -130,30 +110,6 @@ export class AuthService {
         console.log('setavatar - Avatar set:', this.avatar);
       }
     }
-    
-
-    getbackground(): string {
-      return localStorage.getItem('background')  || '';
-    }
-
-    setbackground(background: string): void {
-      this.background = background;
-      if (isPlatformBrowser(this.platformId))  {
-        localStorage.setItem('background', background);
-        console.log('setbackground - Background set:', this.background);
-      }
-    }
-
-    updateBackground(email: string, newBackground: string): Observable<any> {
-      const headers = new HttpHeaders({
-        'Content-Type': 'application/json',
-      });
-    
-      const data = { email, newBackground }; 
-      return this.http.post(`${this.apiUrl}update-background`, data, { headers });
-    }
-    
-    
 
     
     login(email: string, password: string): Observable<any> {
@@ -183,9 +139,7 @@ export class AuthService {
             ) {
               this.setToken(response.token);
               this.setUserId(response.user_id);
-              this.setRole(response.role);
               this.setavatar(response.avatar);
-              this.setbackground(response.background);
               
               // Set firstName and lastName
               this.setFirstName(response.first_name);
@@ -196,11 +150,7 @@ export class AuthService {
                 response.token,
                 'UserId:',
                 response.user_id,
-                'Role:',
-                response.role,
                 'Avatar:',
-                response.background,
-                'Background:',
                 response.avatar,
                 'firstName:',
                 response.first_name,
@@ -251,16 +201,14 @@ export class AuthService {
             }
             this.token = '';
             this.userId = undefined;
-            this.role = undefined;
             this.avatar = undefined;
-            this.background = undefined;
             console.log('logout - Token, UserId, and Role removed');
           })
         );
     }
   
     isLoggedIn(): boolean {
-      const loggedIn = !!this.token && !!this.userId && !!this.role;
+      const loggedIn = !!this.token && !!this.userId;
       console.log('isLoggedIn:', loggedIn);
       return loggedIn;
     }
@@ -280,13 +228,5 @@ export class AuthService {
   
     getEmail(): string {
       return localStorage.getItem('email') || '';
-    }
-
-    setBackground(background: string): void {
-      localStorage.setItem('background', background);
-    }
-
-    getBackground(): string {
-      return localStorage.getItem('background') || '';
     }
   }

@@ -1,34 +1,38 @@
 .form-container {
     position: relative;
-    background: rgb(2,0,36);
-background: radial-gradient(circle, rgba(2,0,36,1) 30%, rgba(12,16,80,1) 65%, rgba(18,124,145,1) 100%);
+    background: linear-gradient(to bottom, #ffffff, rgb(233, 228, 228)); /* Gradient from white to light color */
     overflow: hidden; /* Ensure the overlay doesn't extend outside the container */
-}
-
-.form-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Adjust the second value (0.5) to change the darkness level */
-    z-index: 1; /* Ensure the overlay is above the background image */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center items horizontally */
+    justify-content: center; /* Center items vertically */
+    color: #000000;
 }
 
-.form-container > * {
-    position: relative;
-    z-index: 2; /* Ensure content is above the overlay */
+/* Add this rule for the image */
+.form-image {
+    width: 600px; /* Adjust the width as needed */
+    height: auto; /* Maintain aspect ratio */
+    margin-left: -100px;
 }
 
+/* Adjust the board-form-inner2 to align items */
+.board-form-inner2 {
+    display: flex; /* Use flexbox to align image and form */
+    align-items: center; /* Center items vertically */
+    margin-bottom: 20px; /* Optional: Add some space below the form */
+    justify-content: center; /* Center items horizontally */
+}
 
 /* Add some basic styling to the form */
 form {
+    margin-left: -160px;
     width: 400px;
     padding: 20px;
-    background-color: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
+    background-color: #ffffff;
     border-radius: 10px;
-    backdrop-filter: blur(10px); /* Frosted glass effect */
     border: 1px solid rgba(255, 255, 255, 0.2); /* Light border */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for depth */
 }
@@ -36,9 +40,9 @@ form {
 /* Style the labels and inputs */
 label {
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     font-weight: bold;
-    color: #ffffff;
+    color: #000000;
 }
 
 input,
@@ -47,10 +51,10 @@ textarea {
     height: 40px;
     margin-bottom: 20px;
     padding: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.3); /* Semi-transparent border */
+    border: none;
     border-radius: 5px;
-    background-color: rgba(255, 255, 255, 0.2); /* Slightly transparent background */
-    color: #ffffff;
+    background-color: rgba(107, 107, 107, 0.2); /* Slightly transparent background */
+    color: #000000;
 }
 
 input#password {
@@ -62,10 +66,15 @@ input[type="date"] {
     /* add some extra padding for the date picker icon */
 }
 
+input:focus{
+    outline: none;
+}
+
 textarea {
     height: 100px;
     resize: vertical;
     background-color: rgba(255, 255, 255, 0.2); /* Slightly transparent background */
+    border: none;
 }
 
 /* Style the submit button */
@@ -73,20 +82,33 @@ button[type="submit"],
 .submit1 {
     
     padding: 10px 20px;
+    width: 100%;
     border: none;
     border-radius: 5px;
+    margin-bottom: 10px;
+    margin-top: 10px;
     cursor: pointer;
-    background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent background */
-    border: 1px solid rgba(255, 255, 255, 0.3); /* Semi-transparent border */
+    background: #746a11; /* Semi-transparent background */
     color: #ffffff;
     transition: background-color 0.3s, color 0.3s, transform 0.3s;
 }
 
 button[type="submit"]:hover,
 .submit1:hover {
-    background-color: rgba(255, 255, 255, 0.4); /* Slightly more opaque on hover */
-    color: #042145;
-    transform: scale(1.1);
+    background: #a79811; /* Semi-transparent background */
+    color: #ffffff;
+}
+
+.signup {
+    color: #000000;
+    text-align: center;
+    margin-top: 10px;
+    display: block; /* Ensure it behaves like a block element */
+}
+
+.signup-link {
+    color: #2c22bd;
+    cursor: pointer;
 }
 
 .sticky button+button {
@@ -116,21 +138,17 @@ button[type="submit"]:hover,
     align-items: center;
 }
 
-hr {
-    background-color: #ffffff;
-}
-
-.form-container {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
 /* Make the form responsive */
 @media (max-width: 600px) {
     form {
         margin: 20px;
     }
+}
+
+/* Add this rule to change the font of the h2 element */
+h2 {
+    font-family: 'Roboto', sans-serif; /* Use Roboto font for a professional look */
+    font-size: 50px; /* Adjust the font size as needed */
+    font-weight: bold;
+    color: #000000; /* Ensure the color is set as desired */
 }

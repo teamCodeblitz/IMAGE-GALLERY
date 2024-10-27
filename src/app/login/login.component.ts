@@ -21,22 +21,7 @@ export class LoginComponent {
   }
 
   login() {
-    if (this.loginForm.valid) {
-      const { email, password } = this.loginForm.value;
-      this.authService.login(email, password).subscribe(response => {
-        console.log('Login response:', response);
-        if (response && response.token && response.user_id) {
-          this.authService.setToken(response.token);
-          this.authService.setUserId(response.user_id);
-          this.router.navigate(['/kanban-board']);
-          console.log('Login successful - Token:', response.token, 'UserId:', response.user_id);
-        } else {
-          console.log('Login failed - Invalid response:', response);
-        }
-      }, error => {
-        console.error('Login failed', error);
-      });
-    }
+
   }
 
   goToRegister() {

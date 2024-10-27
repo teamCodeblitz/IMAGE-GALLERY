@@ -32,16 +32,6 @@ export class RegisterComponent {
   // HANDLES THE PROCESS OF REGISTRATIOM
 
   register() {
-    if (this.registerForm.valid) {
-      const { email, password, firstName, lastName, middleName } = this.registerForm.value;
-      this.authService.register(email, password, firstName, lastName, middleName ).subscribe(
-        (response: any) => {
-          this.router.navigate(['/login']);
-        },
-        (error: any) => {
-          console.error('Registration failed', error);
-        }
-      );
+
     }
   }
-}

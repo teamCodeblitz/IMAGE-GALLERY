@@ -7,11 +7,6 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { SidenavService } from './services/sidenav.service';
-import { KanbanTaskCardComponent } from './kanban-task-card/kanban-task-card.component';
-import { KanbanColumnComponent } from './kanban-column/kanban-column.component';
-import { KanbanCreateTaskFormComponent } from './kanban-create-task-form/kanban-create-task-form.component';
-import { KanbanUpdateTaskFormComponent } from './kanban-update-task-form/kanban-update-task-form.component';
-import { ConfirmationModalComponent } from './confirmation-modal/confirmation-modal.component';
 import { BodyComponent } from './body/body.component';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
@@ -29,11 +24,6 @@ import { AppSidebarComponent } from './sidebar/sidebar.component';
     MatSidenavModule,
     MatButtonModule,
     MatToolbarModule,
-    KanbanColumnComponent,
-    KanbanTaskCardComponent,
-    KanbanUpdateTaskFormComponent,
-    KanbanCreateTaskFormComponent,
-    ConfirmationModalComponent,
     BodyComponent, 
     LoginComponent, 
     RegisterComponent,

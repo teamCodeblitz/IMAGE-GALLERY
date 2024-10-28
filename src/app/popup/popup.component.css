@@ -1,0 +1,94 @@
+.popup-container {
+    width: 100%; /* Set the width of the popup */
+    height: 100%; /* Set the height of the popup */
+    background-color: #ffffff;
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    display: flex; /* Flexbox for layout */
+    flex-direction: column; /* Stack children vertically */
+    align-items: center; /* Center align children */
+}
+
+.pagination {
+    margin-top: 20px; /* Space above pagination */
+    display: flex; /* Flexbox for pagination buttons */
+    justify-content: space-between; /* Space between buttons */
+    width: 100%; /* Full width for pagination */
+}
+
+button {
+    margin-top: -15px;
+    background-color: transparent; /* Primary button color */
+    font-size: 15px;
+    color: rgb(0, 0, 0); /* Text color */
+    border: none; /* Remove default border */
+    border-radius: 4px; /* Rounded button corners */
+    padding: 10px 15px; /* Button padding */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth background color transition */
+}   
+
+h2 {
+    margin-top: -20px;
+    font-size: 15px; /* Title font size */
+    color: #333; /* Title color */
+    text-align: center; /* Center the title text */
+    width: 100%; /* Ensure full width for centering */
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Center horizontally */
+}
+
+.upload-container {
+    display: flex; /* Flexbox for layout */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    flex-direction: column; /* Stack children vertically */
+    height: 100%; /* Ensure it takes full height */
+}
+
+.view-image-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center the content vertically */
+    align-items: center; /* Center the content horizontally */
+    height: 100%; /* Fill the available height */
+    background-color: #ffffff; /* Optional: Set a background color */
+}
+
+.select-button {
+    margin-top: 10px;
+    background-color: #551919;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #ffffff;
+    height: auto;
+}
+
+.select-button:hover {
+    background-color: #a72727;
+}
+
+.description {
+    width: 100%; /* Full width */
+    height: 20%; /* Height of the input */
+    background-color: #ffffff; /* Background color */
+    color: #000000; /* Text color */
+    border: none; /* No border */
+    border-radius: 14px; /* Rounded corners */
+    padding: 10px;
+}
+
+.description:focus {
+    outline: none; /* Remove default outline */
+}
+
+.emoji-picker {
+    display: flex;
+    gap: 5px;
+    position: absolute;
+    right: 10px; /* Adjust as needed */
+    transform: translateY(-50%); /* Center vertically */
+    margin-bottom: -20px;
+    cursor: pointer;
+}

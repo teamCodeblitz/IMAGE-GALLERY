@@ -1,0 +1,47 @@
+<div class="popup-container">
+    <!-- ... existing code ... -->
+    <div class="pagination">
+        <button *ngIf="currentPage > 1" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>
+        <h2>{{ getPageTitle(currentPage) }}</h2> 
+        <button *ngIf="currentPage > 1 && currentPage < 4" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === 4">Next</button>
+        <button *ngIf="currentPage === 4" (click)="onDone()" [disabled]="currentPage !== 4">Upload</button>
+    </div>
+    <div class="divider" style="width: 100%; height: 1px; background-color: #a7a4a4; margin-top: -10px;"></div>
+    <div *ngIf="currentPage === 1" class="upload-container" style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+        <div *ngIf="!imageUrl" style="text-align: center;">
+            <img [src]="hovered ? 'uploadicon_dragged.png' : 'uploadicon.png'" alt="" style="width: 100px; height: 100px; margin-bottom: 20px;">
+            <p style="font-size: 24px; color: #000000; margin-bottom: 15px;">Drag photos and videos here</p>
+            <input type="file" (change)="onFileSelect($event)" style="display: none;" #fileInput>
+            <button mat-button class="select-button" (click)="fileInput.click()">Select from computer</button>
+        </div>
+    </div> 
+    <div *ngIf="currentPage === 2" class="view-image-container" style="display: flex; flex-direction: column; height: 100%;">
+        <img *ngIf="imageUrl" [src]="imageUrl" alt="Uploaded Image" style="width: 100%; height: 100%; object-fit: cover;">
+        <p *ngIf="!imageUrl" style="text-align: center;">No image uploaded.</p>
+    </div>
+    <div *ngIf="currentPage === 3" class="edit-image-container" style="display: flex; flex-direction: column; height: 100%;">
+      <img *ngIf="imageUrl" [src]="imageUrl" alt="Uploaded Image" style="width: 100%; height: 100%; object-fit: cover;">
+      <p *ngIf="!imageUrl" style="text-align: center;">No image uploaded.</p>
+  </div>
+    <div *ngIf="currentPage === 4" class="view-image-container" style="display: flex; flex-direction: column; height: 100%;">
+        <img *ngIf="imageUrl" [src]="imageUrl" alt="Uploaded Image" style="width: 100%; height: 100%; object-fit: cover;">
+        <div style="display: flex; align-items: center; width: 100%; padding: 10px;">
+            <input type="text" class="description" placeholder="Enter description here" 
+                   style="flex: 1; margin-right: 8px;" 
+                   [(ngModel)]="description" 
+                   (keydown)="limitDescription($event)">
+            <div (click)="showEmojiPicker = !showEmojiPicker; showIcon = !showIcon" style="cursor: pointer;">
+              <mat-icon *ngIf="showIcon">insert_emoticon</mat-icon>
+          </div>
+          <div *ngIf="showEmojiPicker" class="emoji-picker">
+              <span (click)="addEmoji('😃')">😃</span>
+              <span (click)="addEmoji('😄')">😄</span>
+              <span (click)="addEmoji('😅')">😅</span>
+              <span (click)="addEmoji('😆')">😆</span>
+              <span (click)="addEmoji('😉')">😉</span>
+              <span (click)="addEmoji('😊')">😊</span>
+          </div>
+        <p *ngIf="!imageUrl" style="text-align: center;">No image uploaded.</p>
+    </div>
+    <!-- Display the current page title -->s
+</div>

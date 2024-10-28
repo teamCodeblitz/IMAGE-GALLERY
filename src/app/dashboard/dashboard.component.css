@@ -1,0 +1,25 @@
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    color: black;
+    justify-content: center;
+    align-items: center;
+}
+
+.card {
+    margin-top: 20px;
+    width: auto;
+    height: auto;
+    border-radius: 15px;
+}
+
+.icons {
+    color: #000000;
+    display: flex; /* Added to align icons horizontally */
+    gap: 10px; /* Added space between icons */
+}
+
+.icons:hover{
+    color: gray;
+}

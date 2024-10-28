@@ -1,0 +1,29 @@
+<div class="profile-container">
+    <div class="header">
+        <img src="/profile/{{ avatar }}" alt="Profile Picture" style=" width: 150px; /* Smaller size for mobile */
+        height: 150px; /* Smaller size for mobile */
+        border-radius: 50%; /* Circular shape */
+        background-size: cover; /* Cover the entire area */
+        background-position: center; /* Center the image */
+        margin-right: 10px; /* Adjusted margin for better alignment */
+        border: solid 5px transparent; /* Set border to transparent for gradient */
+        background-image: linear-gradient(to right, rgb(153, 33, 63), rgb(255, 165, 0), rgb(216, 187, 26)); /* Updated gradient for smoother transition */
+        background-clip: border-box; /* Clip the background to the border */
+        -webkit-background-clip: border-box; /* For Safari compatibility */
+        position: relative; /* Positioning for pseudo-element */
+        z-index: 1; "> <!-- Corrected src binding -->
+        <div class="profile-info">
+            <h2>{{ firstname }}</h2> <!-- This should display the firstname -->
+        </div>
+        <div class="profile-actions">
+            <button>Edit profile</button>
+            <button>Settings</button>
+        </div>
+    </div>
+    <div class="divider"></div>
+    <div class="profile-gallery">
+        <div class="card" *ngFor="let card of cards; let i = index">
+            <img [src]="card.imagePath" alt="Gallery Image"> <!-- Use dynamic image path -->
+        </div>
+    </div>
+</div>

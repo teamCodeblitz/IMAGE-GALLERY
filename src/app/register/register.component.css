@@ -1,0 +1,160 @@
+/* Add some basic styling to the form */
+.form-container {
+    position: relative;
+    background: linear-gradient(to bottom, #ffffff, rgb(233, 228, 228)); /* Gradient from white to light color */
+    overflow: hidden; /* Ensure the overlay doesn't extend outside the container */
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center items horizontally */
+    justify-content: center; /* Center items vertically */
+    color: #000000;
+}
+
+form {
+    width: 400px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Style the labels and inputs */
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #000000;
+}
+
+input,
+textarea {
+    width: 100%;
+    height: 40px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: rgba(107, 107, 107, 0.2);
+    color: #000000;
+}
+
+input#password {
+    margin-bottom: 10px;
+}
+
+input[type="date"] {
+    padding: 10px 10px 10px 20px;
+    /* add some extra padding for the date picker icon */
+}
+
+textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+/* Style the submit button */
+button[type="submit"] {
+    padding: 10px 20px;
+    width: 100%;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+    background: #746a11;
+    color: #ffffff;
+    transition: background-color 0.3s, color 0.3s, transform 0.3s;
+}
+
+button[type="submit"]:hover {
+    background: #a79811;
+    color: #ffffff;
+}
+
+.submit1 {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #042145;
+    border: 1px solid #bedbff;
+    color: #bedbff;
+}
+
+.submit1:hover {
+    background-color: #bedbff;
+    color: #042145;
+    transform: scale(1.1);
+}
+
+.sticky button+button {
+    margin-left: 10px;
+}
+
+.board-form {
+    width: 400px;
+    margin-right: 5px;
+}
+
+.board-form-inner1,
+.board-form-inner2 {
+    height: 100%;
+    background-color: none;
+}
+
+
+.modal-body,
+.modal-content,
+.board-form-inner2 {
+    width: fit-content;
+}
+
+.board-form-inner2 {
+    display: flex;
+    align-content: center;
+    align-items: center;
+}
+
+hr {
+    background-color: #ffffff;
+}
+
+
+/* Make the form responsive */
+@media (max-width: 600px) {
+    form {
+        margin: 20px;
+    }
+}
+
+
+.position-relative {
+    display: flex;
+    /* z-index: 2; */
+    justify-content: center;
+    align-items: center;
+}
+
+/* Adjust the signup link */
+.signup {
+    color: #000000;
+    text-align: center;
+    margin-top: 10px;
+    display: block;
+}
+
+.signup-link {
+    color: #2c22bd;
+    cursor: pointer;
+}
+
+h2 {
+    font-family: 'Roboto', sans-serif; /* Use Roboto font for a professional look */
+    font-size: 50px; /* Adjust the font size as needed */
+    font-weight: bold;
+    color: #000000; /* Ensure the color is set as desired */
+    text-align: center;
+}

@@ -1,0 +1,43 @@
+<nav>
+    
+    <ul class="sidebar">
+      <li class="menu-item" 
+          (click)="navigateTo('/dashboard')" 
+          [class.active]="isActive('/dashboard')">
+        <span class="icon">
+          <i class="fa fa-solid fa-tachometer-alt"></i>
+        </span>
+        <span class="label">Dashboard</span>
+      </li>
+      <li class="menu-item" 
+          (click)="openPopup()" 
+          [class.active]="isActive('/create')">
+        <span class="icon">
+          <i class="fa fa-solid fa-plus-circle"></i>
+        </span>
+        <span class="label">Create</span>
+      </li>
+      <li class="menu-item" 
+          (click)="navigateTo('/profile')" 
+          [class.active]="isActive('/profile')">
+        <span class="icon">
+          <i class="fa fa-solid fa-user-circle"></i>
+        </span>
+        <span class="label">Profile</span>
+      </li>
+      <li class="menu-item" 
+          (click)="navigateTo('/settings')" 
+          [class.active]="isActive('/settings')">
+        <span class="icon">
+          <i class="fa fa-solid fa-cog"></i>
+        </span>
+        <span class="label">Settings</span>
+      </li>
+      <li class="menu-item" (click)="logout()">
+        <span class="icon">
+          <i class="fa fa-solid fa-sign-out-alt"></i>
+        </span>
+        <span class="label">Logout</span>
+      </li>
+    </ul>
+  </nav>

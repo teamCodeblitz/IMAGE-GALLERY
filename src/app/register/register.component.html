@@ -1,0 +1,55 @@
+<div class="form-container">
+    <div class="board-form-inner2">
+      <form class="sticky" [formGroup]="registerForm" (ngSubmit)="register()">
+        <div class="header">
+          <h2 class="">ImageGallery</h2>
+        </div>
+  
+        <div>
+          <input
+            id="firstName"
+            formControlName="firstName"
+            type="text"
+            placeholder="Firstname"
+          />
+        </div>
+        <div>
+          <input
+            id="lastName"
+            formControlName="lastName"
+            type="text"
+            placeholder="Lastname"
+          />
+        </div>
+        <div>
+          <input
+            id="middleName"
+            formControlName="middleName"
+            type="text"
+            placeholder="Middlename"
+          />
+        </div>
+        <div>
+          <input
+            id="email"
+            formControlName="email"
+            type="email"
+            placeholder="Email"
+          />
+        </div>
+        <div>
+          <input
+            id="password"
+            formControlName="password"
+            type="password"
+            placeholder="Password"
+          />
+        </div>
+        <hr class="white" />
+        <button type="submit">Register</button>
+        <a class="signup" (click)="goToLogin()">
+          Already have an account? <span class="signup-link">Sign in</span>
+        </a>
+      </form>
+    </div>
+  </div>

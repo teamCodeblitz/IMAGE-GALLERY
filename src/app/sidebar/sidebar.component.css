@@ -1,0 +1,82 @@
+.icon{
+    color: rgb(255, 255, 255);
+}
+
+.sidebar {
+	display: flex;
+	flex-direction: column;
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100vh;
+	width: 48px;
+  	padding: 0;
+  	margin: 0;
+	background: linear-gradient(to bottom, #7a2d2d, #4a1a1a); /* Changed to a gradient */
+	overflow: hidden;
+	transition: ease-in 0.5s;
+}
+
+.sidebar:hover {
+	width: 150px;
+}
+
+.menu-item:hover {
+	border: 1px solid white;
+}
+
+.sidebar:hover .label{
+	opacity: 1;
+}
+
+.menu-item {
+	padding: 12px;
+	text-decoration: none;
+	display: flex;
+	gap: 12px;
+	align-items: center;
+	cursor: pointer;
+    color: rgb(255, 255, 255);
+}
+
+.menu-item .icon {
+	text-align: center;
+	padding: 4px;
+}
+
+.menu-item:hover .icon{
+	color: #000000;
+}
+
+.menu-item:hover{
+	background: rgb(231, 230, 230);
+	color: #000000;
+}
+
+.menu-item .label {
+	opacity: 0;
+	transition: opacity 0.4s ease-in-out; 
+}
+
+.menu-item:last-child {
+	margin-top: auto;
+}
+
+[class*="fa-"]::before {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+}
+
+.menu-item.active {
+	background-color: #f0f0f0;
+	color: #000;
+}
+
+.menu-item.active .icon{
+	color: #000000;
+}
+
+.menu-item.active:hover {
+	background-color: #e0e0e0;
+}

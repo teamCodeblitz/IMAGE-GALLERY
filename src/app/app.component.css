@@ -1,0 +1,25 @@
+.gallery-container {
+    height: 100vh; /* Make the container fill the viewport height */
+    display: flex; /* Ensure it behaves as a flex container */
+    flex-direction: column; /* Ensure the top nav is on top */
+    background-color: #ffffff;
+  }
+  
+  mat-drawer {
+    width: 40px; /* Default width */
+    height: 100%; /* Adjust for the height of the toolbar */
+    background-color: #ffffff;
+    border-radius: 0px;
+    transition: ease-in 0.5s;
+  }
+
+  mat-drawer:hover{
+    width: 150px;
+  }
+  
+  mat-drawer-content {
+    flex: 1; /* Make the body fill the remaining space */
+    height: calc(100% - 60px); 
+    background-color: #ffffff;
+  }
+

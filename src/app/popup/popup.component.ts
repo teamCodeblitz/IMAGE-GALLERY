@@ -22,6 +22,7 @@ export class PopupComponent {
     description: string = '';
     currentUserId: string = ''; // Declare currentUserId property with initializer
     email: string = ''; // Declare email property with initializer
+    avatar: string | null = null; // Declare avatar property with initializer
 
     constructor(private dialogRef: MatDialogRef<PopupComponent>) { // {{ edit_1 }}
         this.currentUserId = ''; // Initialize in constructor
@@ -151,6 +152,7 @@ export class PopupComponent {
                 this.currentUserId = data.userId; // Store user ID
                 this.email = email; // Store email
                 console.log('Login successful, User ID:', this.currentUserId);
+                this.fetchUserProfile(this.currentUserId); // After successful login, fetch user profile
             } else {
                 console.error(data.error);
             }
@@ -158,5 +160,21 @@ export class PopupComponent {
         .catch(error => {
             console.error('Error:', error);
         });
+    }
+
+    fetchUserProfile(userId: string): void { // {{ edit_2 }}
+        fetch(`http://localhost/IMAGE-GALLERY/backend/get_user.php?id=${userId}`) // Fetch user data
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    console.error(data.error);
+                } else {
+                    this.email = data.firstName; // Store user's first name
+                    this.avatar = data.avatar; // Store user's avatar
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching user profile:', error);
+            });
     }
 }

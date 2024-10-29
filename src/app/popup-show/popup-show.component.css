@@ -1,0 +1,67 @@
+.popup-container {
+    display: flex; /* Use flexbox for layout */
+    position: fixed; /* Fixed position for popup */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust for centering */
+    background-color: white; /* Background color */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Shadow for popup */
+    z-index: 1000; /* Ensure it appears above other content */
+    width: 80%; /* Adjust width as needed */
+    height: 97%; /* Set height to auto to fit content */
+    overflow: auto; /* Optional: allow scrolling if content exceeds max height */
+}
+
+.image-container {
+    height: 100%; /* Set height to 100% to fit the popup container */
+    flex: 1;
+    align-items: center; /* Center image vertically */
+    justify-content: center; /* Center image horizontally */
+    object-fit: cover; /* Maintain aspect ratio while covering the container */
+}
+
+.information {
+    padding: 20px; /* Add padding for spacing */
+    color: black;
+    flex: 1;
+    /* ... existing styles ... */
+}
+
+.description {
+    width: 100%; /* Full width */
+    height: 20%; /* Height of the input */
+    background-color: #ffffff; /* Background color */
+    color: #000000; /* Text color */
+    border: none; /* No border */
+    border-radius: 14px; /* Rounded corners */
+    padding: 10px;
+}
+
+.description:focus {
+    outline: none; /* Remove default outline */
+}
+
+.close-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 24px; /* Adjust size as needed */
+}
+
+.close-icon:hover {
+    color: rgb(0, 0, 0);
+}
+
+.favorite-icon {
+    color: rgb(0, 0, 0); /* Fill color */
+    border-radius: 50%; /* Optional: to make it circular */
+    padding: 5px; /* Optional: to add some space around the icon */
+}
+
+.favorite-icon:active {
+    color: tomato;
+    border-radius: 50%; /* Optional: to make it circular */
+    padding: 5px; /* Optional: to add some space around the icon */
+}
+

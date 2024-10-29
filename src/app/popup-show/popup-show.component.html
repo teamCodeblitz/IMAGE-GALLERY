@@ -1,0 +1,67 @@
+<section class="popup-container">
+    <div class="image-container">
+        <img [src]="imagePath" alt="Selected Image" />
+    </div>
+    <div class="information" style="position: relative; text-align: center;">
+        <div class="right-container" style="display: flex; flex-direction: column; align-items: center; width: 100%; margin-top: -20px;">
+            <div style="display: flex; align-items: center; justify-content: flex-start; width: 100%;">
+                <img src="http://localhost/IMAGE-GALLERY/backend/profile/{{ avatar }}" alt="Profile Picture" style="height: 80px; border-radius: 50%; padding: 20px; margin-right: -10px;">
+                <div>
+                    <div class="firstname" style="align-items: flex-start; font-size: 16px; margin-bottom: -10px; margin-top: 10px; text-align: left;">{{ firstName }}</div>
+                    <div class="email" style="font-size: 12px; align-items: flex-start;">{{ email }}</div>
+                </div>
+            </div>
+
+            <div class="divider" style="width: 96%; height: 1px; background-color: #535151; position: absolute; top: 80px; margin-top: auto; margin-bottom: auto;"></div>
+
+
+           <div class="comments" style="text-align: left; background-color: #ffffff; width: 100%; height: 730px; margin-top: 10px; overflow: auto; scrollbar-width: none; -ms-overflow-style: none;">
+               <div *ngFor="let comment of comments" class="comment-card" style="margin-bottom: 10px; padding: 10px; background-color: white; display: flex; align-items: center; height: 40px;">
+                <img src="http://localhost/IMAGE-GALLERY/backend/profile/{{ avatar }}" alt="Profile Picture" style="height: 80px; border-radius: 50%; padding: 20px; margin-left: -12px;">
+                <div style="flex: 1; display: flex; flex-direction: column; margin-left: 10px;">
+                    <div class="firstname" style="font-size: 16px; margin-bottom: -10px;">{{ firstName }}</div>
+                    <div class="email" style="font-size: 12px;">{{ email }}</div>
+                </div>
+                <p style="margin-left: 10px;">{{ comment }}</p>
+               </div>
+           </div>
+    </div>
+    <div class="divider" style="width: 96%; height: 1px; background-color: #535151; position: absolute; bottom: 50px; margin-left: -5px; margin-top: 10px;"></div>
+    <div class="reactions" style="position: absolute; bottom: 60px; display: flex; align-items: center; margin-bottom: 30px;">
+        <div (click)="toggleFavorite()" style="cursor: pointer; margin-right: 5px;">
+            <span class="material-icons favorite-icon" 
+                  [ngStyle]="{'color': isFavorite ? 'red' : 'inherit'}"
+                  style="margin-right: 2px;">
+                {{ isFavorite ? 'favorite' : 'favorite_border' }}
+            </span> 
+        </div>
+        <span class="material-icons">comment</span> 
+    </div>
+    <div class="like-info" style="position: absolute; bottom: 40px; font-size: 12px; text-align: center; align-items: flex-start; margin-bottom: 30px;">
+        <span *ngIf="!isFavorite">Be the first to like this</span>
+        <span *ngIf="isFavorite">You liked this</span>
+    </div>
+    <div class="date" style="position: absolute; font-size: 12px; color: gray; bottom: 15px; margin-top: -5px; margin-bottom: 40px; align-items: flex-start;">January 16, 2023</div>
+
+    <div style="display: flex; justify-content: flex-end; align-items: center; width: 95%; position: absolute; bottom: 0; margin-bottom: 5px;">
+        <div style="flex: 1; margin-right: 8px;">
+            <input type="text" class="description" placeholder="Add a comment..." 
+                   style="width: 100%;" 
+                   [(ngModel)]="description" 
+                   (keydown)="limitDescription($event)">
+        </div>
+        <div (click)="showEmojiPicker = !showEmojiPicker; showIcon = !showIcon" style="cursor: pointer; margin-bottom: -5px;">
+            <mat-icon *ngIf="showIcon">insert_emoticon</mat-icon>
+        </div>
+        <div *ngIf="showEmojiPicker" class="emoji-picker">
+            <span (click)="addEmoji('😃')">😃</span>
+            <span (click)="addEmoji('😄')">😄</span>
+            <span (click)="addEmoji('😅')">😅</span>
+            <span (click)="addEmoji('😆')">😆</span>
+            <span (click)="addEmoji('😉')">😉</span>
+            <span (click)="addEmoji('😊')">😊</span>
+        </div>
+    </div>
+    </div>
+    <span class="close-icon" (click)="closePopup()">✖</span>
+</section>

@@ -79,13 +79,60 @@
 }
 
 .card {
+    position: relative; /* Set position to relative for the pseudo-element */
     width: 300px; /* Fixed width for cards */
     height: 400px; /* Fixed height for cards */
     background-color: #686565;
     margin: 3px; /* Add margin for spacing between cards */
     text-align: center; /* Center text in cards */
+    justify-content: center;
+    cursor: pointer;
 }
 
+/* Add hover effect for cards */
+.card:hover::after {
+    content: ""; /* Create a pseudo-element */
+    position: absolute; /* Position it absolutely within the card */
+    top: 0; /* Cover the entire card */
+    left: 0; /* Cover the entire card */
+    right: 0; /* Cover the entire card */
+    bottom: 0; /* Cover the entire card */
+    background-color: rgba(128, 128, 128, 0.5); /* Gray background with low opacity */
+    z-index: 1; /* Ensure it appears above the card content */
+}
+
+/* Add heart and comment emoticons */
+.card:hover .emoticons {
+    display: flex; /* Use flexbox for alignment */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    position: absolute; /* Position it absolutely within the card */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust for centering */
+    z-index: 2; /* Ensure it appears above the background */
+    cursor: pointer;
+}
+
+/* Initially hide emoticons */
+.emoticons {
+    display: none; /* Hide by default */
+    font-size: 24px; /* Adjust icon size */
+    color: white; /* Change color as needed */
+    gap: 5px;
+}
+
+/* Show emoticons when card is hovered */
+.card:hover .emoticons {
+    display: flex; /* Show emoticons on hover */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    position: absolute; /* Position it absolutely within the card */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust for centering */
+    z-index: 2; /* Ensure it appears above the background */
+}
 
 /* Add this new class for header layout */
 .header {

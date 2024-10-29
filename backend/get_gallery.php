@@ -20,16 +20,19 @@ if ($conn->connect_error) {
 $userId = $_GET['id']; // Retrieve userId from the GET request
 $email = $_GET['email']; // Retrieve email from the GET request
 
-// Query to fetch images based on userId only
-$sql = "SELECT images FROM gallery WHERE user_id = ?"; // Updated query
+// Query to fetch images and their IDs based on userId
+$sql = "SELECT id, images FROM gallery WHERE user_id = ?"; // Updated query to include 'id'
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $userId); // Changed to bind 'userId' as integer
+$stmt->bind_param("i", $userId); // Bind 'userId' as integer
 $stmt->execute();
 $result = $stmt->get_result();
 
 $images = [];
 while ($row = $result->fetch_assoc()) {
-    $images[] = $row['images']; // Use 'images' column
+    $images[] = [
+        'id' => $row['id'], // Include 'id' in the response
+        'image' => $row['images'] // Use 'images' column
+    ];
 }
 
 echo json_encode($images); // Return images as JSON

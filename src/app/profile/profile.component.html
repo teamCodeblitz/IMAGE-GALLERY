@@ -1,6 +1,6 @@
 <div class="profile-container">
     <div class="header">
-        <img src="/profile/{{ avatar }}" alt="Profile Picture" style=" width: 150px; /* Smaller size for mobile */
+        <img src="http://localhost/IMAGE-GALLERY/backend/profile/{{ avatar }}" alt="Profile Picture" style=" width: 150px; /* Smaller size for mobile */
         height: 150px; /* Smaller size for mobile */
         border-radius: 50%; /* Circular shape */
         background-size: cover; /* Cover the entire area */
@@ -21,9 +21,23 @@
         </div>
     </div>
     <div class="divider"></div>
+    <div *ngIf="cards.length === 0" style="display: flex; align-items: center; justify-content: center; height: 100%; font-size: 30px; color: #000000; margin: 20px 0;">No posted yet</div> <!-- Message when no images are available -->
     <div class="profile-gallery">
-        <div class="card" *ngFor="let card of cards; let i = index">
-            <img [src]="card.imagePath" alt="Gallery Image"> <!-- Use dynamic image path -->
+        
+        <div class="card" *ngFor="let card of cards" (click)="openPopup(card.imagePath, card.id); updateUrl(card.id)">
+            <img [src]="card.imagePath" alt="Gallery Image">
+            <div class="emoticons">
+                <span class="material-icons">favorite</span> 4
+                <span class="material-icons">comment</span> 5
+            </div>
         </div>
     </div>
+    <app-popup-show 
+        [selectedImageId]="selectedImageId !== undefined ? selectedImageId.toString() : '0'" 
+        *ngIf="showPopup" 
+        [imagePath]="selectedImage" 
+        [avatar]="avatar"
+        [firstName]="firstname"
+        (popupClosed)="closePopup()">
+    </app-popup-show>
 </div>

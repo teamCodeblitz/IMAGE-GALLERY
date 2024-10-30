@@ -5,6 +5,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PopupShowComponent } from '../popup-show/popup-show.component';
 import { PopupComponent } from "../popup/popup.component"; // Import the PopupShowComponent
 
+interface ReactionResponse {
+    total_reacts: number; // Update the expected structure
+    message: string; // Add this line to include the message property
+    user_reacted: boolean; // Add this line to include the user_reacted property
+}
+
 @Component({
   selector: 'app-profile',
   standalone: true,
@@ -21,6 +27,8 @@ export class ProfileComponent implements OnInit {
     selectedImage: string = ''; // New property for selected image
     showPopup: boolean = false; // Control popup visibility
     selectedImageId: number | undefined; // New property for selected image ID
+    totalReacts: { [key: number]: number } = {}; // New property to store total reacts for each card
+    description: string = ''; // Add this line to declare the description property
 
     constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) {} // Inject Router
 
@@ -52,26 +60,47 @@ export class ProfileComponent implements OnInit {
     }
 
     getUserGallery() {
-        this.http.get<{ id: number; image: string; }[]>(`http://localhost/IMAGE-GALLERY/backend/get_gallery.php?id=${this.currentUserId}&email=${this.email}`)
+        this.http.get<{ id: number; image: string; description: string; }[]>(`http://localhost/IMAGE-GALLERY/backend/get_gallery.php?id=${this.currentUserId}&email=${this.email}`)
             .subscribe(images => {
                 console.log(images); // Log the images array to check the response
-                if (images.length === 0) { // Check if there are no images
-                    console.log('No Uploaded Files'); // Log the message
-                    this.cards = []; // Clear the cards array
+                if (images.length === 0) {
+                    console.log('No Uploaded Files');
+                    this.cards = [];
                 } else {
                     this.cards = images.map(image => {
-                        const imagePath = `http://localhost/IMAGE-GALLERY/backend/uploads/${image.image}`; // Updated to include full URL
-                        console.log('Image Path:', imagePath); // Log the image path for debugging
-                        return { imagePath, id: image.id }; // Return the object with the image path and ID from the database
+                        const imagePath = `http://localhost/IMAGE-GALLERY/backend/uploads/${image.image}`;
+                        console.log('Image Path:', imagePath);
+                        console.log('Image Description:', image.description); // Log the description
+                        return { imagePath, id: image.id, description: image.description }; // Ensure description is included
                     });
+                    console.log('Cards Array:', this.cards); // Log the cards array
                 }
             });
     }
 
-    openPopup(imagePath: string, imageId: number) {
+    openPopup(imagePath: string, imageId: number, description: string) {
+        console.log('Opening Popup with Description:', description); // Log the description being passed
         this.selectedImage = imagePath; // Set the selected image path
         this.selectedImageId = imageId; // Set the selected image ID
+        this.description = description; // Add this line to set the description
         this.showPopup = true; // Show the popup
+        // Fetch the total reacts for the hovered card
+        this.fetchTotalReacts(imageId);
+    }
+
+    fetchTotalReacts(imageId: number) {
+        const userIdFromStorage = localStorage.getItem('userId'); // Retrieve user ID from local storage
+        const userId = userIdFromStorage ? +userIdFromStorage : undefined; // Set userId
+
+        if (userId) {
+            this.http.get<ReactionResponse>(`http://localhost/IMAGE-GALLERY/backend/get_reaction.php?id=${imageId}&userId=${userId}`)
+                .subscribe(response => {
+                    console.log('Total reacts for hovered card:', response.total_reacts); // Log the total reacts
+                    this.totalReacts[imageId] = response.total_reacts; // Store the total reacts for the specific imageId
+                }, error => {
+                    console.error('Error fetching reaction data:', error);
+                });
+        }
     }
 
     closePopup() {

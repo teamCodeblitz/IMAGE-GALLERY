@@ -24,10 +24,10 @@
     <div *ngIf="cards.length === 0" style="display: flex; align-items: center; justify-content: center; height: 100%; font-size: 30px; color: #000000; margin: 20px 0;">No posted yet</div> <!-- Message when no images are available -->
     <div class="profile-gallery">
         
-        <div class="card" *ngFor="let card of cards" (click)="openPopup(card.imagePath, card.id); updateUrl(card.id)">
+        <div class="card" *ngFor="let card of cards" (click)="openPopup(card.imagePath, card.id, card.description); updateUrl(card.id)">
             <img [src]="card.imagePath" alt="Gallery Image">
             <div class="emoticons">
-                <span class="material-icons">favorite</span> 4
+                <span class="material-icons">favorite</span> {{ totalReacts[card.id] || 0 }} <!-- Display total reacts -->
                 <span class="material-icons">comment</span> 5
             </div>
         </div>
@@ -38,6 +38,7 @@
         [imagePath]="selectedImage" 
         [avatar]="avatar"
         [firstName]="firstname"
+        [description]="description"
         (popupClosed)="closePopup()">
     </app-popup-show>
 </div>

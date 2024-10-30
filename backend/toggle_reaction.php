@@ -19,43 +19,32 @@ if ($conn->connect_error) {
 }
 
 $data = json_decode(file_get_contents("php://input"), true);
-if (!isset($data['id'])) {
+if (!isset($data['id']) || !isset($data['userId'])) {
     die(json_encode(['error' => 'Invalid input']));
 }
 
 $imageId = $data['id'];
+$userId = $data['userId'];
 
-// Check if the image already has a reaction
-$sql = "SELECT reacts FROM gallery WHERE id = ?";
+// Check if the user has already reacted to this image
+$sql = "SELECT * FROM reactions WHERE user_id = ? AND image_id = ?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $imageId);
+$stmt->bind_param("ii", $userId, $imageId);
 $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-    $currentReacts = $row['reacts'];
-
-    if ($currentReacts > 0) {
-        // Image has a reaction, decrement the reacts count
-        $sql = "UPDATE gallery SET reacts = reacts - 1 WHERE id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $imageId);
-        $stmt->execute();
-        echo json_encode(['message' => 'Reaction removed']);
-    } else {
-        // If reacts is 0, treat it as adding a reaction
-        $sql = "UPDATE gallery SET reacts = reacts + 1 WHERE id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $imageId);
-        $stmt->execute();
-        echo json_encode(['message' => 'Reaction added']);
-    }
-} else {
-    // If no record
-    $sql = "UPDATE gallery SET reacts = reacts + 1 WHERE id = ?";
+    // User has already reacted, remove the reaction
+    $sql = "DELETE FROM reactions WHERE user_id = ? AND image_id = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $imageId);
+    $stmt->bind_param("ii", $userId, $imageId);
+    $stmt->execute();
+    echo json_encode(['message' => 'Reaction removed']);
+} else {
+    // User has not reacted, add the reaction
+    $sql = "INSERT INTO reactions (user_id, image_id, react) VALUES (?, ?, 1)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ii", $userId, $imageId);
     $stmt->execute();
     echo json_encode(['message' => 'Reaction added']);
 }

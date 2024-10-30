@@ -21,9 +21,9 @@ $userId = $_GET['id']; // Retrieve userId from the GET request
 $email = $_GET['email']; // Retrieve email from the GET request
 
 // Query to fetch images and their IDs based on userId
-$sql = "SELECT id, images FROM gallery WHERE user_id = ?"; // Updated query to include 'id'
+$sql = "SELECT id, images, description FROM gallery WHERE user_id = ? AND email = ?"; // Updated query to include 'id' and 'email'
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $userId); // Bind 'userId' as integer
+$stmt->bind_param("is", $userId, $email); // Bind 'userId' as integer and 'email' as string
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -31,7 +31,8 @@ $images = [];
 while ($row = $result->fetch_assoc()) {
     $images[] = [
         'id' => $row['id'], // Include 'id' in the response
-        'image' => $row['images'] // Use 'images' column
+        'image' => $row['images'], // Use 'images' column
+        'description' => $row['description'] // Use 'description' column
     ];
 }
 

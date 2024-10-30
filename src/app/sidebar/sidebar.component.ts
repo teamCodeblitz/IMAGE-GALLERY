@@ -5,12 +5,14 @@ import { MatIcon } from '@angular/material/icon';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog'; // Import MatDialog
 import { PopupComponent } from '../popup/popup.component';
+import { DashboardComponent } from '../dashboard/dashboard.component';
+import { DashboardService } from '../services/dashboard.service';
 
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, MatSidenavModule, MatIcon],
+  imports: [CommonModule, MatSidenavModule, MatIcon, DashboardComponent],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })
@@ -18,7 +20,7 @@ export class SidebarComponent implements OnInit {
   activePage: string = ''; // Declare a property to track the active page
   isExpanded = false; // Track the expanded state
 
-  constructor(private router: Router, private dialog: MatDialog) {} // Inject MatDialog
+  constructor(private router: Router, private dialog: MatDialog, private dashboardService: DashboardService) {} // Inject MatDialog
 
   ngOnInit() {
     this.router.events.subscribe(() => {
@@ -40,7 +42,11 @@ export class SidebarComponent implements OnInit {
   }
 
   navigateTo(page: string) {
-    this.router.navigate([page]); // Navigate to the specified page
+    this.dashboardService.setLoading(true); // Set loading state to true immediately
+    this.router.navigate([page]).then(() => {
+        // Reload the page after navigation
+        window.location.reload(); // Force a reload of the page
+    });
   }
 
   openPopup() {

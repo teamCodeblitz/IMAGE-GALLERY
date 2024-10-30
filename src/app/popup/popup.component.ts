@@ -108,8 +108,8 @@ export class PopupComponent {
             const img = new Image();
             img.onload = () => {
                 const canvas = document.createElement('canvas');
-                canvas.width = 960; // Set canvas width
-                canvas.height = 958; // Set canvas height
+                canvas.width = img.width; // Set canvas width to the original image width
+                canvas.height = img.height; // Set canvas height to the original image height
                 const ctx = canvas.getContext('2d');
                 ctx?.drawImage(img, 0, 0, canvas.width, canvas.height); // Draw the image on the canvas
                 this.imageUrl = canvas.toDataURL(); // Set the imageUrl to the resized image

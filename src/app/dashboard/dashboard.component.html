@@ -1,8 +1,7 @@
 <div class="dashboard-container">
   <div *ngIf="loading" class="reload-icon" style="position: absolute; left: 50%; transform: translate(-50%, -50%); z-index: 1000; display: flex; justify-content: center; align-items: center;">
-    <div class="loader"></div>
   </div>
-  <div *ngFor="let image of images" class="card" (click)="openPopup(image.path, image.id); updateUrl(image.id.toString())">
+  <div *ngFor="let image of images" class="card" (click)="openPopup(image.path, image.id, image.description || ''); updateUrl(image.id.toString())">
     <div class="content" style="width: 100%; height: 100%;">
       <img [src]="image.path" alt="" />
     </div>
@@ -10,7 +9,7 @@
 </div>
 
 <app-popup-show 
-  [selectedImageId]="selectedImageId !== null ? selectedImageId.toString() : '0'" 
+  [selectedImageId]="selectedImageId !== null ? selectedImageId.toString() : '0'"
   *ngIf="selectedImage" 
   [imagePath]="selectedImage" 
   (popupClosed)="closePopup()">

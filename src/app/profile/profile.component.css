@@ -24,13 +24,7 @@
     display: flex; /* Align items horizontally */
     align-items: center; /* Center items vertically */
     flex-direction: column; /* Stack items vertically */
-    margin-bottom: 20px; /* Space between profile info and gallery */
-}
-
-.profile-info h2 {
-    font-size: 20px; /* Smaller font size for mobile */
-    margin-top: 30px;
-    margin-left: 20px; /* Adjust margin for smaller screens */
+    margin-bottom: 10px; /* Reduced space below profile info */
 }
 
 .profile-followers {
@@ -140,8 +134,10 @@
 /* Add this new class for header layout */
 .header {
     display: flex; /* Use flexbox for layout */
-    align-items: center; /* Center items vertically */
-    justify-content: flex-start; /* Align items to the start */
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center items horizontally */
+    text-align: center; /* Center text */
+    margin-top: 20px; /* Reduced margin for spacing */
 }
 
 
@@ -161,4 +157,51 @@
     height: 100%;
     object-fit: cover;
     transition: transform 0.3s;
+}
+
+/* Add this new class for profile image styling */
+.profile-image {
+    width: 100%; /* or a specific width */
+    height: 120px; /* maintain aspect ratio */
+    max-width: 120px; /* set a max width if needed */
+    border-radius: 50%; /* optional: to make it circular */
+    object-fit: cover; /* ensures the image covers the area without stretching */
+    margin-bottom: 10px;
+}
+
+/* Add this new class for action buttons */
+.action-button {
+    padding: 10px 15px; /* Button padding */
+    border: none; /* Remove border */
+    background-color: #e0e0e0; /* Button background */
+    border-radius: 14px; /* Rounded corners */
+    cursor: pointer; /* Pointer on hover */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+    margin-top: -10px;
+}
+
+.action-button:hover {
+    background-color: #f8f4f4; /* Button background on hover */
+}
+
+.username {
+    font-size: 30px; /* Adjust font size for username */
+    font-weight: 500;
+    color: #000000; /* Gray color for username */
+    margin: 0; /* Remove default margin */
+}
+
+.email {
+    font-size: 14px; /* Smaller font size for email */
+    color: #747373; /* Lighter gray for email */
+}
+
+.post-count {
+    font-size: 14px; /* Smaller font size for post count */
+    color: #000000; /* Lighter gray for post count */
+}
+
+.profile-actions {
+    display: flex; /* Align buttons horizontally */
+    gap: 5px; /* Reduced space between buttons */
 }

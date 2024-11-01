@@ -21,7 +21,7 @@ $userId = $_GET['id']; // Retrieve userId from the GET request
 $email = $_GET['email']; // Retrieve email from the GET request
 
 // Query to fetch images and their IDs based on userId
-$sql = "SELECT id, images, description FROM gallery WHERE user_id = ? AND email = ?"; // Updated query to include 'id' and 'email'
+$sql = "SELECT id, images, description, date FROM gallery WHERE user_id = ? AND email = ?"; // Updated query to include 'id', 'email', and 'date'
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("is", $userId, $email); // Bind 'userId' as integer and 'email' as string
 $stmt->execute();
@@ -32,10 +32,14 @@ while ($row = $result->fetch_assoc()) {
     $images[] = [
         'id' => $row['id'], // Include 'id' in the response
         'image' => $row['images'], // Use 'images' column
-        'description' => $row['description'] // Use 'description' column
+        'description' => $row['description'], // Use 'description' column
+        'date' => $row['date'] // Include 'date' in the response
     ];
 }
 
-echo json_encode($images); // Return images as JSON
+// Get post count
+$postCount = count($images); // Count the number of images
+
+echo json_encode(['images' => $images, 'postCount' => $postCount]); // Return images and post count as JSON
 $stmt->close();
 $conn->close();

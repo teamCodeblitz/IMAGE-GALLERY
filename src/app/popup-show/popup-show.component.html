@@ -5,7 +5,7 @@
     <div class="information" style="position: relative; text-align: center;">
         <div class="right-container" style="display: flex; flex-direction: column; align-items: center; width: 100%; margin-top: -20px;">
             <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
-                <img src="http://localhost/IMAGE-GALLERY/backend/profile/{{ avatar }}" alt="Profile Picture" style="height: 80px; border-radius: 50%; padding: 20px; margin-right: -10px;">
+                <img src="http://localhost/IMAGE-GALLERY/backend/profile/{{ avatar }}" alt="Profile Picture" style="width: 100%; max-width: 80px; height: 80px; border-radius: 50%; padding: 20px; margin-left: -13px;">
                 <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-start;">
                     <div class="firstname" style="font-size: 16px; margin-bottom: -10px; margin-top: 10px;">{{ firstName }}</div>
                     <div class="email" style="font-size: 12px;">{{ email }}</div>
@@ -15,19 +15,23 @@
                 </div>
             </div>
 
-            <div class="divider" style="width: 96%; height: 1px; background-color: #535151; position: absolute; top: 80px; margin-top: auto; margin-bottom: auto;"></div>
+            <div class="divider" style="width: 96%; height: 1px; background-color: #dfdada; position: absolute; top: 80px; margin-top: auto; margin-bottom: auto;"></div>
 
 
-           <div class="comments" style="text-align: left; background-color: #ffffff; width: 100%; height: 730px; margin-top: 10px; overflow: auto; scrollbar-width: none; -ms-overflow-style: none;">
-               <div *ngFor="let comment of comments" class="comment-card" style="margin-bottom: 10px; padding: 10px; background-color: white; display: flex; align-items: center; height: 40px;">
-                <img src="http://localhost/IMAGE-GALLERY/backend/profile/{{ avatar }}" alt="Profile Picture" style="height: 80px; border-radius: 50%; padding: 20px; margin-left: -12px;">
-                <div style="flex: 1; display: flex; flex-direction: column; margin-left: 10px;">
-                    <div class="firstname" style="font-size: 16px; margin-bottom: -10px;">{{ firstName }}</div>
-                    <div class="email" style="font-size: 12px;">{{ email }}</div>
+            <div class="comments" style="text-align: left; background-color: #ffffff; width: 100%; height: 730px; margin-top: 10px; overflow: auto; scrollbar-width: none; -ms-overflow-style: none;">
+                <div *ngFor="let comment of comments" class="comment-card" style="margin-bottom: -10px; padding: 10px; background-color: white; display: flex; align-items: flex-start; height: auto;">
+                    <img src="http://localhost/IMAGE-GALLERY/backend/profile/{{ comment.userDetail.avatar }}" alt="Profile Picture" style="height: 60px; border-radius: 50%; padding: 10px; margin-left: -12px; margin-top: -10px; width: 100%; max-width: 60px;">
+                    <div style="flex: 1; display: flex; flex-direction: column; margin-left: 10px;">
+                        <div class="firstname" style="font-size: 16px; font-weight: 500; margin-bottom: -10px;">{{ comment.userDetail.firstName }}</div>
+                        <div class="email" style="font-size: 12px;">{{ comment.userDetail.email }}</div>
+                        <div style="margin-top: 5px;">
+                            {{ comment.comment }}  
+                            <span style="color: gray; font-size: 13px;">● {{ getFormattedDate(comment.date) }}</span>
+                        </div>
+                    </div>
                 </div>
-                <p style="margin-left: auto; margin-right: 10px;">{{ comment }}</p>
-               </div>
-           </div>
+                <p *ngIf="comments.length === 0" style="text-align: center; margin-top: 20px;">No comments available.</p>
+            </div>
     </div>
  
     <div class="reactions" style="position: absolute; bottom: 60px; display: flex; align-items: center; margin-bottom: 30px;">
@@ -44,26 +48,25 @@
         <span *ngIf="likeInfo">{{ likeInfo }}</span>
         <span *ngIf="!likeInfo && !isFavorite">Be the first to like this</span>
     </div>
-    <div class="date" style="position: absolute; font-size: 12px; color: gray; bottom: 15px; margin-top: -5px; margin-bottom: 40px; align-items: flex-start;">January 16, 2023</div>
+    <div class="date" style="position: absolute; font-size: 12px; color: gray; bottom: 15px; margin-top: -5px; margin-bottom: 40px; align-items: flex-start;">
+        {{ getFormattedDate(datePosted) }}
+    </div>
 
     <div style="display: flex; justify-content: flex-end; align-items: center; width: 95%; border: 1px solid rgb(172, 168, 168); border-radius: 10px; position: absolute; bottom: 0; margin-bottom: 15px; margin-left: -5px;">
         <div style="flex: 1;">
             <input type="text" class="description" placeholder="Add a comment..." 
                    style="width: 100%;" 
-                   [(ngModel)]="comments" 
+                   [(ngModel)]="comment" 
+                   (keydown)="handleKeydown($event)"
                    (keydown)="limitDescription($event)">
         </div>
-        <div (click)="showEmojiPicker = !showEmojiPicker; showIcon = !showIcon" style="cursor: pointer; margin-bottom: -5px;">
+        <div (click)="showEmojiPicker = !showEmojiPicker; showIcon = !showIcon" style="cursor:s pointer; margin-bottom: -5px;">
             <mat-icon *ngIf="showIcon">insert_emoticon</mat-icon>
+            <div *ngIf="comment" (click)="sendComment()" style="cursor: pointer; margin-bottom: -5px; margin-right: 10px;">
+                <mat-icon>send</mat-icon>
+            </div>
         </div>
-        <div *ngIf="showEmojiPicker" class="emoji-picker">
-            <span (click)="addEmoji('😃')">😃</span>
-            <span (click)="addEmoji('😄')">😄</span>
-            <span (click)="addEmoji('😅')">😅</span>
-            <span (click)="addEmoji('😆')">😆</span>
-            <span (click)="addEmoji('😉')">😉</span>
-            <span (click)="addEmoji('😊')">😊</span>
-        </div>
+    
     </div>
     </div>
     <span class="close-icon" (click)="closePopup()">✖</span>

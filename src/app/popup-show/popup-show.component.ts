@@ -1,8 +1,10 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { forkJoin, map } from 'rxjs';
+import { formatDistanceToNow, format } from 'date-fns'; // Import date-fns for date formatting
 
 // Define an interface for the response type
 interface ReactionResponse {
@@ -24,6 +26,20 @@ interface ImageResponse {
     id: number;
     image: string;
     description: string; // Add description to the image response type
+    date: string; // Add date to the image response type
+}
+
+// Define an interface for the comment response type
+interface CommentResponse {
+    success: boolean; // Add success property
+    // ... other properties if needed
+}
+
+// Define an interface for the comment type
+interface Comment {
+    user_id: number; // Assuming user_id is part of the comment structure
+    comment: string; // Ensure the comment property is defined
+    date: string; // Add date to the comment structure
 }
 
 @Component({
@@ -43,6 +59,8 @@ export class PopupShowComponent implements OnInit {
     @Output() imageSelected = new EventEmitter<number>();
     @Input() selectedImageId!: string;
     @Input() description!: string; // Add this line to receive the description
+    @Input() comments: { userDetail: { firstName: string; avatar: string; email: string }; comment: string; date: string }[] = []; // Change the type of comments to accommodate user details
+    @Input() datePosted!: string; // Add this line to receive the datePosted
     
     // New property to control visibility
     isVisible: boolean = true;
@@ -51,18 +69,14 @@ export class PopupShowComponent implements OnInit {
     isFavorite: boolean = false;
     showIcon: boolean = false;
     email: string = '';
-    imageId!: number; // New property to store the image ID
+    imageId!: number; // New property to store the image IDs
     likeInfo: string = ''; // Add this line to declare the likeInfo property
-    cards: { imagePath: string; id: number; description: string }[] = []; // Add this line to declare the cards property
+    cards: { imagePath: string; id: number; description: string; date: string }[] = []; // Add this line to declare the cards property
+    comment: string = ''; // Add this line to declare the comment property
 
-    comments: string[] = [
-        'Comment 1',
-    ];
-
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
     ngOnInit() {
-        console.log('Description in PopupShowComponent:', this.description); // Log the description
         const userIdFromStorage = localStorage.getItem('userId'); // Retrieve user ID from local storage
         this.userId = userIdFromStorage ? +userIdFromStorage : undefined; // Set userId
         if (this.userId) {
@@ -71,6 +85,10 @@ export class PopupShowComponent implements OnInit {
             console.error("User ID not found."); // Log error if userId is not found
         }
         this.checkInitialReaction(); // Check initial reaction state
+        this.cdr.detectChanges(); // Trigger change detection if necessary
+        this.fetchComments(); // Call fetchComments when the component initializes
+        this.getImageDate(); // Remove the argument to match the method signature
+        this.fetchImageDescription(); // Call this method to fetch the description on initialization
     }
 
     fetchUserData() {
@@ -102,7 +120,7 @@ export class PopupShowComponent implements OnInit {
           return;
       }
 
-      if (this.description.length >= 15) {
+      if (this.comment.length >= 1500) {
           event.preventDefault();
       }
   }
@@ -154,12 +172,9 @@ export class PopupShowComponent implements OnInit {
         if (this.selectedImageId) {
             const cardId = this.selectedImageId; // Store selected image ID
             const userId = this.userId; // Store user ID
-            console.log('Card ID sent to PHP:', cardId); // Log the card ID
-            console.log('User ID sent to PHP:', userId); // Log the user ID
             
             this.http.get<ReactionResponse>(`http://localhost/IMAGE-GALLERY/backend/get_reaction.php?id=${this.selectedImageId}&userId=${userId}`)
                 .subscribe(response => {
-                    console.log('Response from PHP:', response); // Log the response
                     this.isFavorite = response.user_reacted; // Set isFavorite based on user reaction
                     this.updateLikeInfo(response.total_reacts); // Update like info
                 }, error => {
@@ -190,10 +205,10 @@ export class PopupShowComponent implements OnInit {
     }
 
     getUserGallery() {
-        const currentUserId = this.userId; // Add this line to use userId instead
-        this.http.get<{ id: number; image: string; description: string; }[]>(`http://localhost/IMAGE-GALLERY/backend/get_gallery.php?id=${currentUserId}&email=${this.email}`)
+        const currentUserId = this.userId; 
+        this.http.get<{ id: number; image: string; description: string; date: string; }[]>(`http://localhost/IMAGE-GALLERY/backend/get_gallery.php?id=${currentUserId}&email=${this.email}`)
             .subscribe(images => {
-                console.log(images); // Log the images array to check the response
+                console.log('Full API Response:', images); // Log the full response
                 if (images.length === 0) {
                     console.log('No Uploaded Files');
                     this.cards = [];
@@ -202,18 +217,138 @@ export class PopupShowComponent implements OnInit {
                         const imagePath = `http://localhost/IMAGE-GALLERY/backend/uploads/${image.image}`;
                         console.log('Image Path:', imagePath);
                         console.log('Image Description:', image.description); // Log the description
-                        return { imagePath, id: image.id, description: image.description };
+                        console.log('Image Date:', image.date); // Log the date
+                        return { imagePath, id: image.id, description: image.description, date: image.date }; 
                     });
                 }
             });
     }
 
     // Add this method to handle image selection
-    selectImage(image: { imagePath: string; id: number; description: string }) {
+    selectImage(image: { imagePath: string; id: number; description: string; date: string }) {
         this.imagePath = image.imagePath; // Set the image path
         this.selectedImageId = image.id.toString(); // Set the selected image ID
         this.description = image.description; // Set the description of the selected image
-        console.log('Selected Image Description:', this.description); // Debugging line
+        this.getImageDate(); // Fetch the date for the selected image (no arguments needed)
+        console.log('Selected Image Description:', this.description); // Log the description
+        this.fetchComments(); // Fetch comments for the selected image
+        this.fetchImageDescription(); // Call the new method to fetch the image description
+    }
+
+    sendComment() {
+        if (this.comment.trim()) {
+            const payload = {
+                user_id: this.userId,
+                cardId: this.selectedImageId,
+                comment: this.comment
+            };
+
+            console.log('Sending Comment:', payload);
+
+            this.http.post<CommentResponse>('http://localhost/IMAGE-GALLERY/backend/send_comment.php', payload, {
+                withCredentials: true // Ensure credentials are included
+            })
+            .subscribe(response => {
+                console.log('Response:', response);
+                if (response.success) {
+                    // Fetch user details for the current user
+                    this.http.get<{ firstName: string; avatar: string; email: string }>(`http://localhost/IMAGE-GALLERY/backend/get_user.php?id=${this.userId}`)
+                        .subscribe(userDetail => {
+                            // Add the new comment to the comments array without reloading
+                            this.comments.push({
+                                userDetail: userDetail, // Use fetched user details
+                                comment: this.comment,
+                                date: new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Manila" })).toISOString() // Use Philippine time
+                            });
+                            this.comment = ''; // Clear the comment input after sending
+                        });
+                }
+            }, error => {
+                console.error('Error:', error);
+            });
+        }
+    }
+
+    // New method to fetch comments for the selected image
+    fetchComments() {
+        // Now fetch comments
+        this.http.get<{ user_id: number; comment: string; date: string }[]>(`http://localhost/IMAGE-GALLERY/backend/get_comment.php?image_id=${this.selectedImageId}`)
+            .subscribe(comments => {
+                console.log('Fetched comments:', comments); // Log the fetched comments
+                const userRequests = comments.map(comment => 
+                    this.http.get<{ firstName: string; avatar: string; email: string }>(`http://localhost/IMAGE-GALLERY/backend/get_user.php?id=${comment.user_id}`)
+                        .pipe(map(userDetail => ({
+                            userDetail,
+                            comment: comment.comment,
+                            date: comment.date // Include the date in the user comment object
+                        })))
+                );
+
+                // Wait for all user requests to complete
+                forkJoin(userRequests).subscribe(userComments => {
+                    this.comments = userComments; // Update to store user comments with details and date
+                });
+            }, error => {
+                console.error('Error fetching comments:', error);
+            });
+    }
+    
+    getFormattedDate(date: string | undefined): string {
+        if (!date) {
+            return 'Invalid date'; // Return a fallback message
+        }
+
+        // Convert the date format to ISO 8601
+        const isoDate = date.replace(' ', 'T'); // Replace space with 'T' for ISO format
+        const datePosted = new Date(isoDate);
+        
+        // Check if the date is valid
+        if (isNaN(datePosted.getTime())) {
+            console.error('Invalid date:', date); // Log the invalid date
+            return 'Invalid date'; // Return a fallback message
+        }
+
+        const now = new Date();
+        const hoursDifference = Math.abs(now.getTime() - datePosted.getTime()) / (1000 * 3600);
+
+        if (hoursDifference < 24) {
+            return formatDistanceToNow(datePosted, { addSuffix: true }); // e.g., "5 hours ago"
+        } else {
+            return format(datePosted, 'MMMM d, yyyy'); // e.g., "November 1, 2024"
+        }
+    }
+
+    getImageDate() { // Removed the imageId parameter
+        const imageId = this.selectedImageId; // Use selectedImageId directly
+        this.http.get<{ date: string; error?: string }>(`http://localhost/IMAGE-GALLERY/backend/get_image_date.php?image_id=${imageId}`)
+            .subscribe(response => {
+                if (response.error) {
+                    console.error('Error fetching image date:', response.error);
+                } else {
+                    this.datePosted = response.date; // Set the datePosted property
+                }
+            }, error => {
+                console.error('Error fetching image date:', error);
+            });
+    }
+
+    // New method to fetch the image description
+    fetchImageDescription() {
+        this.http.get<{ description: string }>(`http://localhost/IMAGE-GALLERY/backend/get_description.php?id=${this.selectedImageId}`)
+            .subscribe(response => {
+                this.description = response.description; // Update the description property
+                console.log('Fetched Image Description:', this.description); // Log the fetched description
+            }, error => {
+                console.error('Error fetching image description:', error);
+            });
+    }
+
+    // Add a new method to handle keydown events
+    handleKeydown(event: KeyboardEvent) { // Specify KeyboardEvent type
+        if (event.key === 'Enter') {
+            this.sendComment(); // Call sendComment when Enter is pressed
+            event.preventDefault(); // Prevent default action (like form submission)
+        }
     }
 
 }

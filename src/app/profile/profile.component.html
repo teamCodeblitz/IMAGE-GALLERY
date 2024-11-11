@@ -9,8 +9,7 @@
             <p class="post-count">{{ postCount }} post</p>
         </div>
         <div class="profile-actions">
-            <button class="action-button">Settings</button>
-            <button class="action-button">Edit profile</button>
+            <button class="action-button" (click)="showEditPopup = true">Edit profile</button>
         </div>
     </div>
     <div class="divider"></div>
@@ -35,4 +34,12 @@
         [datePosted]="datePosted"
         (popupClosed)="closePopup()">
     </app-popup-show>
+    <app-edit-profile 
+        *ngIf="showEditPopup" 
+        [firstname]="firstname" 
+        [email]="email" 
+        [avatar]="avatar" 
+        (profileUpdated)="updateProfile($event)" 
+        (popupClosed)="showEditPopup = false">
+    </app-edit-profile>
 </div>

@@ -14,6 +14,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class LoginComponent {
   loginForm: FormGroup;
+  errorMessage: string | null = null;
 
   constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
     // Initialize the loginForm with the required controls
@@ -28,27 +29,26 @@ export class LoginComponent {
   }
 
   login() {
-    if (this.loginForm.valid) {
-      this.http.post('http://localhost/IMAGE-GALLERY/backend/login.php', this.loginForm.value, { responseType: 'text' })
-      .subscribe((response: any) => {
-         console.log(response);
-         try {
-            const jsonResponse = JSON.parse(response);
-            if (jsonResponse.success) {
-               localStorage.setItem('userId', jsonResponse.userId); // Store user ID in local storage
-               localStorage.setItem('email', this.loginForm.value.email); // Store email in local storage
-               this.router.navigate(['/dashboard']);
-            } else {
-               alert(jsonResponse.error);
-            }
-         } catch (e) {
-            console.error("Invalid JSON response:", response);
-            alert("Server returned an invalid response. Please check server logs.");
-         }
-      }, error => {
-         console.error('Error:', error);
-         alert(error.error ? error.error : 'Login failed. Please try again later.');
-      });
-    }
+    this.errorMessage = null;
+    this.http.post('http://localhost/IMAGE-GALLERY/backend/login.php', this.loginForm.value, { responseType: 'text' })
+    .subscribe((response: any) => {
+       console.log(response);
+       try {
+          const jsonResponse = JSON.parse(response);
+          if (jsonResponse.success) {
+             localStorage.setItem('userId', jsonResponse.userId); // Store user ID in local storage
+             localStorage.setItem('email', this.loginForm.value.email); // Store email in local storage
+             this.router.navigate(['/dashboard']);
+          } else {
+             this.errorMessage = jsonResponse.error;
+          }
+       } catch (e) {
+          console.error("Invalid JSON response:", response);
+          this.errorMessage = "Server returned an invalid response. Please check server logs.";
+       }
+    }, error => {
+       console.error('Error:', error);
+       this.errorMessage = error.error ? error.error : 'Login failed. Please try again later.';
+    });
   }
 }

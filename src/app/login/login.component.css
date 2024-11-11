@@ -154,3 +154,12 @@ h2 {
     text-align: center;
 }
 
+.error {
+    border: 1px solid red; /* Red border for invalid input */
+}
+
+.error-message {
+    color: red; /* Red text for error messages */
+    font-size: 12px; /* Adjust font size as needed */
+}
+

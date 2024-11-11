@@ -22,7 +22,7 @@ if ($conn->connect_error) {
 $userId = isset($_GET['id']) ? (int)$_GET['id'] : 0; // Ensure it's an integer
 
 // Prepare and execute the statement to find the user by ID
-$stmt = $conn->prepare("SELECT firstName, avatar, email FROM users WHERE id = ?"); // Include email
+$stmt = $conn->prepare("SELECT firstName, lastName, middleName, avatar, email, password FROM users WHERE id = ?"); // Include lastName, middleName, and password
 if (!$stmt) {
     echo json_encode(["error" => "SQL prepare error: " . $conn->error]);
     exit;
@@ -33,9 +33,9 @@ $stmt->store_result();
 
 // Check if user exists
 if ($stmt->num_rows > 0) {
-    $stmt->bind_result($firstName, $avatar, $email); // Bind email
+    $stmt->bind_result($firstName, $lastName, $middleName, $avatar, $email, $password); // Bind additional fields
     $stmt->fetch();
-    echo json_encode(["firstName" => $firstName, "avatar" => $avatar, "email" => $email]); // Include email in response
+    echo json_encode(["firstName" => $firstName, "lastName" => $lastName, "middleName" => $middleName, "avatar" => $avatar, "email" => $email, "password" => $password]); // Include all fields in response
 } else {
     echo json_encode(["error" => "User not found."]);
 }

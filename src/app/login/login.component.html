@@ -5,12 +5,16 @@
             <div class="header">
                 <h2 class="">ImageGallery</h2>
             </div>
+            
             <div>
-                <input id="email" formControlName="email" type="email" placeholder="Email">
+                <input id="email" formControlName="email" type="email" placeholder="Email"
+                       [ngClass]="{'error': loginForm.get('email')?.invalid && (loginForm.get('email')?.touched || loginForm.get('email')?.dirty)}">
             </div>
             <div>
-                <input id="password" formControlName="password" type="password" placeholder="Password">
+                <input id="password" formControlName="password" type="password" placeholder="Password"
+                       [ngClass]="{'error': loginForm.get('password')?.invalid && (loginForm.get('password')?.touched || loginForm.get('password')?.dirty)}">
             </div>
+            <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
             <button type="submit">Login</button>
             <a class="signup" (click)="goToRegister()">
                 Don't have an account? <span class="signup-link">Sign up</span>

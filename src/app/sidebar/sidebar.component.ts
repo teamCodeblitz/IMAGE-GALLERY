@@ -51,8 +51,6 @@ export class SidebarComponent implements OnInit {
 
   openPopup() {
     const dialogRef = this.dialog.open(PopupComponent, {
-        width: '60%',
-        height: '70%', // Set the width of the dialog
         data: { /* pass any data if needed */ }
     });
 

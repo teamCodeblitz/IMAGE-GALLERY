@@ -80,3 +80,8 @@
 .menu-item.active:hover {
 	background-color: #e0e0e0;
 }
+
+
+.mat-mdc-dialog-surface {
+    background-color: white;
+}

@@ -4,12 +4,13 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PopupShowComponent } from '../popup-show/popup-show.component';
 import { PopupComponent } from "../popup/popup.component"; // Import the PopupShowComponent
+import { EditProfileComponent } from '../edit-profile/edit-profile.component';
 
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, PopupShowComponent, PopupComponent], // Include PopupComponent and PopupShowComponent
+  imports: [CommonModule, PopupShowComponent, PopupComponent, EditProfileComponent], // Include PopupComponent and PopupShowComponent
   providers: [PopupShowComponent], // Add this line to provide PopupShowComponent
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
@@ -30,6 +31,7 @@ export class ProfileComponent implements OnInit {
     datePosted: string = ''; // Declare datePosted property
     postCount: number = 0; // Declare postCount property
     showUploadButton: boolean = false; // Declare showUploadButton property
+    showEditPopup: boolean = false; // Ensure showEditPopup is defined
 
     constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router, popupShowComponent: PopupShowComponent) { // Inject PopupShowComponent
         this.popupShowComponent = popupShowComponent; // Initialize the instance
@@ -146,6 +148,12 @@ export class ProfileComponent implements OnInit {
                 console.error('Error uploading avatar:', error.message);
                 console.error('Error details:', error);
             });
+    }
+
+    updateProfile(updatedInfo: any) {
+        this.firstname = updatedInfo.firstname;
+        this.email = updatedInfo.email;
+        // Optionally, send updatedInfo to the server to save changes
     }
 
 }

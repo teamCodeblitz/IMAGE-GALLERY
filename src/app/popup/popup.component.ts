@@ -1,9 +1,10 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, AfterViewInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
+import { fromEvent } from 'rxjs';
     
 @Component({
   selector: 'app-popup',
@@ -12,7 +13,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './popup.component.html',
   styleUrls: ['./popup.component.css']
 })
-export class PopupComponent {
+export class PopupComponent implements AfterViewInit {
     currentPage: number = 1; // Initialize current page
     hovered: boolean = false; // Declare the hovered property
     imageUrl: string | null = null; // Declare imageUrl property
@@ -23,12 +24,29 @@ export class PopupComponent {
     currentUserId: string = ''; // Declare currentUserId property with initializer
     email: string = ''; // Declare email property with initializer
     avatar: string | null = null; // Declare avatar property with initializer
+    scale: number = 100; // Initial scale
+    top: number = 0; // Initial top position
+    left: number = 0; // Initial left position
+    imageWidth: number = 0; // Width of the image
+    imageHeight: number = 0; // Height of the image
 
     constructor(private dialogRef: MatDialogRef<PopupComponent>) { // {{ edit_1 }}
         this.currentUserId = ''; // Initialize in constructor
         this.email = ''; // Initialize in constructor
     }
 
+    ngAfterViewInit(): void {
+        fromEvent(window, "wheel").subscribe((ev: Event) => {
+            const wheelEvent = ev as WheelEvent;
+            const newScale = this.scale - wheelEvent.deltaY * 0.2;  
+            this.scale = Math.max(newScale, 100);
+            
+            // Calculate the new top and left positions based on the mouse pointer
+            this.top = wheelEvent.clientY - (this.scale / 2);
+            this.left = wheelEvent.clientX - (this.scale / 2);
+        });
+      }
+      
     goToPage(page: number): void {
         if (page >= 1 && page <= 4) {
             if (page === 1) {
@@ -107,6 +125,8 @@ export class PopupComponent {
             const file = input.files[0];
             const img = new Image();
             img.onload = () => {
+                this.imageWidth = img.width; // Set the original image width
+                this.imageHeight = img.height; // Set the original image height
                 const canvas = document.createElement('canvas');
                 canvas.width = img.width; // Set canvas width to the original image width
                 canvas.height = img.height; // Set canvas height to the original image height
@@ -176,5 +196,17 @@ export class PopupComponent {
             .catch(error => {
                 console.error('Error fetching user profile:', error);
             });
+    }
+
+    onDragOver(event: DragEvent): void { // {{ edit_1 }}
+        event.preventDefault(); // Prevent default to allow drop
+    }
+
+    onDrop(event: DragEvent): void { // {{ edit_1 }}
+        event.preventDefault(); // Prevent default behavior
+        const files = event.dataTransfer?.files; // Get the dropped files
+        if (files && files.length > 0) {
+            this.onFileSelect({ target: { files } } as unknown as Event); // Call onFileSelect with the dropped files
+        }
     }
 }

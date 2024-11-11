@@ -1,12 +1,18 @@
-.popup-container {
-    width: 100%; /* Set the width of the popup */
-    height: 100%; /* Set the height of the popup */
+.openPopup {
+    width: 30%; /* Adjusted width as needed */
+    height: 90%; /* Adjusted height to fit content */
+    padding: 10px;
     background-color: #ffffff;
     border-radius: 8px; /* Rounded corners */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
     display: flex; /* Flexbox for layout */
     flex-direction: column; /* Stack children vertically */
     align-items: center; /* Center align children */
+    justify-content: center;
+    position: fixed; /* Position it fixed to the viewport */
+    top: 50%; /* Adjust this value to create space at the top */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust position to truly center */
 }
 
 .pagination {
@@ -38,6 +44,13 @@ h2 {
     justify-content: center; /* Center horizontally */
 }
 
+.image-viewport {
+    height: 100%;
+    width: 100%;
+    background-color: #ffffff;
+}
+
+
 .upload-container {
     display: flex; /* Flexbox for layout */
     justify-content: center; /* Center horizontally */
@@ -47,24 +60,42 @@ h2 {
 }
 
 .view-image-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Center the content vertically */
-    align-items: center; /* Center the content horizontally */
-    height: 100%; /* Fill the available height */
-    background-color: #ffffff; /* Optional: Set a background color */
+    width: 100%; /* Set fixed width */
+    height: 100%; /* Set fixed height */
+    overflow: hidden; /* Hide overflow to prevent scrollbars */
+    position: relative; /* Ensure proper positioning */
 }
 
+.view-image-container img {
+    width: 100%; /* Make the image fill the container */
+    height: auto; /* Maintain aspect ratio */
+    max-height: none; /* Prevent max height restriction */
+    object-fit: cover; /* Cover the container while maintaining aspect ratio */
+    position: absolute; /* Position absolutely for centering */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%) scale(1); /* Ensure initial scale is 1 */
+    transition: transform 0.3s ease; /* Smooth transition for zoom */
+}
 
 .edit-image-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Center the content vertically */
-    align-items: center; /* Center the content horizontally */
-    height: 100%; /* Fill the available height */
-    background-color: #ffffff; /* Optional: Set a background color */
+    width: 100%; /* Set fixed width */
+    height: 100%; /* Set fixed height */
+    overflow: hidden; /* Hide overflow to prevent scrollbars */
+    position: relative; /* Ensure proper positioning */
 }
 
+.edit-image-container img {
+    width: 100%; /* Make the image fill the container */
+    height: auto; /* Maintain aspect ratio */
+    max-height: none; /* Prevent max height restriction */
+    object-fit: cover; /* Cover the container while maintaining aspect ratio */
+    position: absolute; /* Position absolutely for centering */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%) scale(1); /* Ensure initial scale is 1 */
+    transition: transform 0.3s ease; /* Smooth transition for zoom */
+}
 
 .select-button {
     margin-top: 10px;
@@ -82,11 +113,10 @@ h2 {
 
 .description {
     width: 100%; /* Full width */
-    height: 20%; /* Height of the input */
+    height: 100px; /* Height of the input */
     background-color: #ffffff; /* Background color */
     color: #000000; /* Text color */
     border: none; /* No border */
-    border-radius: 14px; /* Rounded corners */
     padding: 10px;
 }
 
@@ -102,4 +132,56 @@ h2 {
     transform: translateY(-50%); /* Center vertically */
     margin-bottom: -20px;
     cursor: pointer;
+}
+
+.parent-container {
+    padding-top: 20px; /* Space at the top */
+    padding-bottom: 20px; /* Space at the bottom */
+}
+
+/* New class for zooming */
+.zoomed {
+    transform: translate(-50%, -50%) scale(1.5); /* Adjust scale as needed */
+}
+
+.crop-button {
+    border: none; /* Remove default border */
+    cursor: pointer; /* Pointer cursor on hover */
+    position: absolute; /* Position it above the image */
+    bottom: 10px; /* Position from the bottom */
+    left: 10px; /* Position from the left */
+    z-index: 10; /* Ensure it appears above the image */
+    padding: 2px;
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+}
+
+.crop-button mat-icon {
+    font-size: 24px; /* Adjust icon size */
+    color: #b4b2b2; /* Icon color */
+}
+
+.crop-button mat-icon:hover {
+    color: #ffffff;
+}
+
+.filter-button {
+    border: none; /* Remove default border */
+    cursor: pointer; /* Pointer cursor on hover */
+    position: absolute; /* Position it above the image */
+    bottom: 10px; /* Position from the bottom */
+    left: 60px; /* Adjust position to the right of the crop button */
+    z-index: 10; /* Ensure it appears above the image */
+    padding: 2px;
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+}
+
+.filter-button mat-icon {
+    font-size: 24px; /* Adjust icon size */
+    color: #b4b2b2; /* Icon color */
+}
+
+.filter-button mat-icon:hover {
+    color: #ffffff;
 }

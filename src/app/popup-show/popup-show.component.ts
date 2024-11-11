@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { forkJoin, map } from 'rxjs';
 import { formatDistanceToNow, format } from 'date-fns'; // Import date-fns for date formatting
+import { Location } from '@angular/common';
 
 // Define an interface for the response type
 interface ReactionResponse {
@@ -73,8 +74,9 @@ export class PopupShowComponent implements OnInit {
     likeInfo: string = ''; // Add this line to declare the likeInfo property
     cards: { imagePath: string; id: number; description: string; date: string }[] = []; // Add this line to declare the cards property
     comment: string = ''; // Add this line to declare the comment property
+    userIdOfSelectedImage!: number; // New property to store user ID of the selected image
 
-    constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
+    constructor(private http: HttpClient, private cdr: ChangeDetectorRef, private location: Location) {}
 
     ngOnInit() {
         const userIdFromStorage = localStorage.getItem('userId'); // Retrieve user ID from local storage
@@ -106,6 +108,29 @@ export class PopupShowComponent implements OnInit {
                 } else {
                     console.error('User not found or error in response');
                 }
+
+                // New code to fetch user ID of the selected image
+                this.http.get<{ user_id: number }>(`http://localhost/IMAGE-GALLERY/backend/get_image_userid.php?id=${this.selectedImageId}`)
+                    .subscribe(userResponse => {
+                        console.log('Response from get_image_userid:', userResponse); // Log the entire response
+                        if (userResponse.user_id) {
+                            console.log('User ID of the selected image:', userResponse.user_id); // Log the user ID
+                            this.userIdOfSelectedImage = userResponse.user_id; // Store user ID in a class property
+                            // Fetch user details for the selected image
+                            this.http.get<{ firstName: string; avatar: string; email: string }>(`http://localhost/IMAGE-GALLERY/backend/get_user.php?id=${userResponse.user_id}`)
+                                .subscribe(userDetail => {
+                                    this.firstName = userDetail.firstName; // Set firstName
+                                    this.avatar = userDetail.avatar; // Set avatar
+                                    this.email = userDetail.email; // Set email
+                                }, error => {
+                                    console.error('Error fetching user details:', error); // Log error
+                                });
+                        } else {
+                            console.error('User ID not found in response'); // Handle case where user ID is not found
+                        }
+                    }, error => {
+                        console.error('Error fetching user ID:', error); // Log error
+                    });
             }, error => {
                 console.error('Error fetching user data:', error);
             });
@@ -230,9 +255,7 @@ export class PopupShowComponent implements OnInit {
         this.selectedImageId = image.id.toString(); // Set the selected image ID
         this.description = image.description; // Set the description of the selected image
         this.getImageDate(); // Fetch the date for the selected image (no arguments needed)
-        console.log('Selected Image Description:', this.description); // Log the description
-        this.fetchComments(); // Fetch comments for the selected image
-        this.fetchImageDescription(); // Call the new method to fetch the image description
+        console.log('Selected Image ID:', this.selectedImageId); // Log the selected image ID
     }
 
     sendComment() {
@@ -349,6 +372,28 @@ export class PopupShowComponent implements OnInit {
             this.sendComment(); // Call sendComment when Enter is pressed
             event.preventDefault(); // Prevent default action (like form submission)
         }
+    }
+
+    deleteImage() {
+        const id = this.selectedImageId; // Use selectedImageId as id
+        console.log('Attempting to delete image with ID:', id); // Log the ID
+        this.http.delete<{ success: boolean; message: string }>(`http://localhost/IMAGE-GALLERY/backend/delete_image.php?id=${id}`)
+            .subscribe(response => {
+                console.log('Delete response:', response); // Log the full response for debugging
+                if (response.success) {
+                    console.log('Image deleted successfully:', response.message);
+                    this.closePopup(); // Close the popup after deletion
+                } else {
+                    console.warn('Delete operation was not successful:', response.message); // Log warning instead of error
+                    // Optionally, you can still close the popup or handle UI updates here
+                }
+            }, error => {
+                console.error('Error deleting image:', error); // Log any errors
+            });
+    }
+
+    reloadPage() {
+        window.location.href = '/dashboard'; // Redirect to the dashboard
     }
 
 }

@@ -1,0 +1,19 @@
+<form (ngSubmit)="submit()">
+  <label for="firstname">First Name:</label>
+  <input id="firstname" [(ngModel)]="updatedFirstname" name="firstname" required>
+
+  <label for="lastname">Last Name:</label>
+  <input id="lastname" [(ngModel)]="updatedLastname" name="lastname" required>
+
+  <label for="middlename">Middle Name:</label>
+  <input id="middlename" [(ngModel)]="updatedMiddlename" name="middlename">
+
+  <label for="email">Email:</label>
+  <input id="email" [(ngModel)]="updatedEmail" name="email" required type="email">
+
+  <label for="password">Password:</label>
+  <input id="password" [(ngModel)]="updatedPassword" name="password" required type="password">
+
+  <button type="submit">Update Profile</button>
+  <button type="button" (click)="close()">Close</button>
+</form>

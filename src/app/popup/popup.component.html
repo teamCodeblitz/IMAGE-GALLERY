@@ -8,8 +8,11 @@
     </div>
     <div class="divider" style="width: 100%; height: 1px; background-color: #a7a4a4; margin-top: -10px;"></div>
     <div class="image-viewport">
-    <div *ngIf="currentPage === 1" class="upload-container" style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-        <div *ngIf="!imageUrl" style="text-align: center;">
+    <div *ngIf="currentPage === 1" class="upload-container" 
+         (dragover)="onDragOver($event)" 
+         (drop)="onDrop($event)" 
+         style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+        <div *ngIf="!imageUrls.length" style="text-align: center;">
             <img [src]="hovered ? 'uploadicon_dragged.png' : 'uploadicon.png'" alt="" style="width: 100px; height: 100px; margin-bottom: 20px;">
             <p style="font-size: 24px; color: #000000; margin-bottom: 15px;">Drag photos and videos here</p>
             <input type="file" (change)="onFileSelect($event)" style="display: none;" #fileInput>
@@ -17,20 +20,29 @@
         </div>
     </div> 
     <div *ngIf="currentPage === 2" class="view-image-container">
-        <img *ngIf="imageUrl" [src]="imageUrl" alt="Uploaded Image" [ngStyle]="{
-            transform: 'scale(' + scale / 100 + ') translate(-50%, -50%)',
-            'transform-origin': 'center'
-          }" #image>
-        <p *ngIf="!imageUrl" style="text-align: center;">No image uploaded.</p>
+        <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+            <ng-container *ngFor="let imageUrl of imageUrls">
+                <img [src]="imageUrl" alt="Uploaded Image" [ngStyle]="{
+                    transform: 'scale(' + scale / 100 + ') translate(-50%, -50%)',
+                    'transform-origin': 'center'
+                  }" style="max-width: 100%; height: auto; margin: 10px;" #image>
+            </ng-container>
+        </div>
+        <p *ngIf="imageUrls.length === 0" style="text-align: center;">No images uploaded.</p>
     </div>
     <div *ngIf="currentPage === 3" class="edit-image-container">
-        <div class="left-image">
-            <img *ngIf="imageUrl" [src]="imageUrl" alt="Uploaded Image" class="adjusted-image" [ngStyle]="{
+        <div class="left-image" style="position: relative;">
+            <button *ngIf="currentImageIndex > 0" (click)="prevImage()" style="position: absolute; left: 10px; color: #ffffff; z-index: 1;">&lt;</button>
+            <ng-container *ngFor="let imageUrl of imageUrls; let i = index">
+            <div *ngIf="i === currentImageIndex">
+            <img *ngIf="imageUrls.length > 0" [src]="imageUrl" alt="Uploaded Image" class="adjusted-image" [ngStyle]="{
                 'filter': 'brightness(' + (brightness + 100) + '%) contrast(' + (contrast + 100) + '%) saturate(' + (saturation + 100) + '%) sepia(' + (fade / 100) + ') ' + selectedFilter
-            }">
+            }" style="max-width: 100%; height: auto;" #image>
+            </div>
+            </ng-container>
+            <button *ngIf="currentImageIndex < imageUrls.length - 1" (click)="nextImage()" style="position: absolute; right: 10px; color: #ffffff; z-index: 1;">&gt;</button>
         </div>
         <div class="right-content">
-            
             <h2>Adjustments</h2>
             <button (click)="resetAdjustments()" style="margin-bottom: 10px; background-color: #581120; color: white; border: 1px solid #ccc;">Reset Adjustments</button> <!-- New Reset Button -->
             <div class="adjustment-slider">
@@ -66,7 +78,7 @@
             <h2>Filters</h2>
             <div class="filter-options">
                 <div *ngFor="let filter of filters" class="filter-card" (click)="applyFilter(filter)">
-                    <img [src]="imageUrl" alt="Filter Preview" [ngStyle]="{ 'filter': filter }" class="filter-image">
+                    <img [src]="imageUrls[0]" alt="Filter Preview" [ngStyle]="{ 'filter': filter }" class="filter-image">
                     <p class="filter-name">{{ filterNames[filter] }}</p>
                 </div>
                 
@@ -74,16 +86,24 @@
         </div>
     </div>
     <div *ngIf="currentPage === 4" class="view-image-container">
-        <img *ngIf="imageUrl" [src]="imageUrl" alt="Uploaded Image" [ngStyle]="{
-            'filter': 'brightness(' + (brightness + 100) + '%) contrast(' + (contrast + 100) + '%) saturate(' + (saturation + 100) + '%) sepia(' + (fade / 100) + ') ' + selectedFilter
-        }">
+        <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+            <button *ngIf="imageUrls.length > 0" (click)="prevImage()" style="position: absolute; left: 10px; z-index: 2;">&lt;</button>
+            <ng-container *ngFor="let imageUrl of imageUrls; let i = index">
+                <div *ngIf="i === currentImageIndex">
+                    <img [src]="imageUrl" alt="Uploaded Image" [ngStyle]="{
+                        'filter': 'brightness(' + (brightness + 100) + '%) contrast(' + (contrast + 100) + '%) saturate(' + (saturation + 100) + '%) sepia(' + (fade / 100) + ') ' + selectedFilter
+                    }" style="max-width: 100%; height: auto;" #image>
+                </div>
+                </ng-container>
+            <button *ngIf="imageUrls.length > 1" (click)="nextImage()" style="position: absolute; right: 10px; z-index: 2;">&gt;</button>
+        </div>
         <div style="display: flex; align-items: center; width: 100%; padding: 10px; position: relative; z-index: 1;">
             <input type="text" class="description" placeholder="Enter description here" 
                    style="flex: 1; margin-right: 8px; padding-right: 30px;" 
                    [(ngModel)]="description" 
                    (keydown)="limitDescription($event)">
         </div>
-        <p *ngIf="!imageUrl" style="text-align: center;">No image uploaded.</p>
+        <p *ngIf="imageUrls.length === 0" style="text-align: center;">No image uploaded.</p>
     </div>
     </div> 
     <!-- Display the current page title -->

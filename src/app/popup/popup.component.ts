@@ -16,7 +16,7 @@ import { fromEvent } from 'rxjs';
 export class PopupComponent implements AfterViewInit {
     currentPage: number = 1;
     hovered: boolean = false; 
-    imageUrl: string | null = null; 
+    imageUrls: string[] = [];
     showEmojiPicker: boolean = false; 
     selectedEmoji: string = ''; 
     showIcon: boolean = true; 
@@ -36,6 +36,7 @@ export class PopupComponent implements AfterViewInit {
     temperature: number = 0; // Initialize temperature
     vignette: number = 0; // Initialize vignette
     selectedFilter: string = '';
+    currentImageIndex: number = 0; // Initialize currentImageIndex
     filters: string[] = [
         'none',
         'brightness(1.2)',
@@ -72,7 +73,7 @@ export class PopupComponent implements AfterViewInit {
     goToPage(page: number): void {
         if (page >= 1 && page <= 4) {
             if (page === 1) {
-                this.imageUrl = null; // Reset imageUrl when going back to page 1
+                this.imageUrls = [];
             }
             this.currentPage = page; // Update current page
         }
@@ -100,7 +101,7 @@ export class PopupComponent implements AfterViewInit {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         const img = new Image();
-        img.src = this.imageUrl || ''; // Use the original image URL or fallback to an empty string
+        img.src = this.imageUrls[0] || ''; // Use the original image URL or fallback to an empty string
 
         img.onload = () => {
             canvas.width = img.width; // Set canvas width to the original image width
@@ -171,20 +172,22 @@ export class PopupComponent implements AfterViewInit {
     onFileSelect(event: Event): void {
         const input = event.target as HTMLInputElement;
         if (input.files && input.files.length > 0) {
-            const file = input.files[0];
-            const img = new Image();
-            img.onload = () => {
-                this.imageWidth = img.width; // Set the original image width
-                this.imageHeight = img.height; // Set the original image height
-                const canvas = document.createElement('canvas');
-                canvas.width = img.width; // Set canvas width to the original image width
-                canvas.height = img.height; // Set canvas height to the original image height
-                const ctx = canvas.getContext('2d');
-                ctx?.drawImage(img, 0, 0, canvas.width, canvas.height); // Draw the image on the canvas
-                this.imageUrl = canvas.toDataURL(); // Set the imageUrl to the resized image
-                this.goToPage(2); // Automatically go to the second page
-            };
-            img.src = URL.createObjectURL(file); // Load the image
+            for (let i = 0; i < input.files.length && i < 2; i++) {
+                const file = input.files[i];
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width; // Set canvas width to the original image width
+                    canvas.height = img.height; // Set canvas height to the original image height
+                    const ctx = canvas.getContext('2d');
+                    ctx?.drawImage(img, 0, 0, canvas.width, canvas.height); // Draw the image on the canvas
+                    this.imageUrls.push(canvas.toDataURL());
+                    if (this.imageUrls.length === 1) {
+                        this.goToPage(2); // Automatically go to the second page after first image
+                    }
+                };
+                img.src = URL.createObjectURL(file); // Load the image
+            }
         }
     }
 
@@ -287,5 +290,26 @@ export class PopupComponent implements AfterViewInit {
 
     applyFilter(filter: string) {
         this.selectedFilter = filter;
+    }
+
+    addMoreImages(): void { // {{ edit_1 }}
+        const fileInput = document.createElement('input'); // Create a file input element
+        fileInput.type = 'file'; // Set the type to file
+        fileInput.multiple = true; // Allow multiple file selection
+        fileInput.accept = 'image/*'; // Accept only image files
+        fileInput.onchange = (event) => this.onFileSelect(event); // Handle file selection
+        fileInput.click(); // Trigger the file input click
+    }
+
+    prevImage() {
+        if (this.currentImageIndex > 0) {
+            this.currentImageIndex--;
+        }
+    }
+
+    nextImage() {
+        if (this.currentImageIndex < this.imageUrls.length - 1) {
+            this.currentImageIndex++;
+        }
     }
 }
